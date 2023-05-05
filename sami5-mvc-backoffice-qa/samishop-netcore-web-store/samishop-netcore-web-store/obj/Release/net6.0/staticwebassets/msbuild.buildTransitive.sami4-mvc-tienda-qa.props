@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\sami4-mvc-tienda-qa.props" />
+</Project>

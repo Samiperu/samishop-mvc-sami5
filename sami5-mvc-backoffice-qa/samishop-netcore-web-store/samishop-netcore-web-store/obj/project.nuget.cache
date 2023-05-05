@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "2BO1eJhju+mTzb27Z2GQoj4XB9+LKhHlrg6e1pNl1xmC9EXIRJwdJ7IPdBUiTJ8J3I1qdsrXqmYnBm0pJ4cYcg==",
+  "success": true,
+  "projectFilePath": "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\anglesharp\\0.16.1\\anglesharp.0.16.1.nupkg.sha512",
+    "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

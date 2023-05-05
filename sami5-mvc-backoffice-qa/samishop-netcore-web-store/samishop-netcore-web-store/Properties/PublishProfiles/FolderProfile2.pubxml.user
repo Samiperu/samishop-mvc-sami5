@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\sami5\deploys\publisMVC-sami5-backoffice-qa</_PublishTargetUrl>
+    <History>True|2023-04-04T12:23:05.0098916Z;True|2022-08-31T12:32:36.8318161-05:00;True|2022-08-31T12:11:54.9804549-05:00;True|2022-08-31T12:10:48.7608693-05:00;True|2022-08-15T18:32:05.6995332-05:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
