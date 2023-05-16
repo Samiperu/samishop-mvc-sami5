@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj": {}
+    "D:\\sami5Final\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj": {}
   },
   "projects": {
-    "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj": {
+    "D:\\sami5Final\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj",
+        "projectUniqueName": "D:\\sami5Final\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj",
         "projectName": "sami5-mvc-backoffice-qa",
-        "projectPath": "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj",
+        "projectPath": "D:\\sami5Final\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\sami5-mvc-backoffice-qa.csproj",
         "packagesPath": "C:\\Users\\Mauricio Angulo\\.nuget\\packages\\",
-        "outputPath": "D:\\sami5\\QA\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\obj\\",
+        "outputPath": "D:\\sami5Final\\sami5-mvc-backoffice-qa\\samishop-netcore-web-store\\samishop-netcore-web-store\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Mauricio Angulo\\AppData\\Roaming\\NuGet\\NuGet.Config",
