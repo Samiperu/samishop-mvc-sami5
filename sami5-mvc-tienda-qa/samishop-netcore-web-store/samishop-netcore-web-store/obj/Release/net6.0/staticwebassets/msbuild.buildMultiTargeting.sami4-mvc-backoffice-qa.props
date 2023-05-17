@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\sami4-mvc-backoffice-qa.props" />
+</Project>

@@ -1,0 +1,10 @@
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\samishop-netcore-web-store.exe
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\appsettings.json
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\aws-beanstalk-tools-defaults.json
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\samishop-netcore-web-store.dll
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\samishop-netcore-web-store.deps.json
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\samishop-netcore-web-store.runtimeconfig.json
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\samishop-netcore-web-store.pdb
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\AngleSharp.dll
+D:\sami3\mvc - sami3 - admin\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\Newtonsoft.Json.dll

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Este archivo se usa en el proceso de publicación y empaquetado del proyecto web. Para personalizar el comportamiento de este proceso,
+edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 para obtener más información. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM48HE2haOUaJKsLSdH0I3QAAAAACAAAAAAAQZgAAAAEAACAAAAAiaX1NJ6C2P3xDNsbahirJ1vu9S/Or30HxDylccXS5lwAAAAAOgAAAAAIAACAAAAAz88FEtlmd37npmNqaDPxM+QCxMkI9eXqLZS1xeiCT0CAAAAB3z2yrJ+8y+eZGDbK0h0oZAGxcHXX6l2Q2/sHp8cu8ukAAAADgcCkMkuRIcBjB1acAraqJTS6+qFtRfHmSqYRWgmMBUpqzv10ArAN1Cglzxi67Fr8ULSTVKN89LAp1qZuZ/zsq</EncryptedPassword>
+    <_PublishTargetUrl>ftp://samifact.somee.com/www.samifact.somee.com</_PublishTargetUrl>
+    <History>False|2022-08-31T17:37:05.5448653Z;False|2022-08-15T18:30:49.9334805-05:00;False|2022-07-22T16:39:14.0504096-05:00;False|2022-07-22T16:38:46.4753769-05:00;False|2022-07-22T16:38:30.3472865-05:00;True|2022-05-04T10:57:51.0850410-05:00;False|2022-05-04T10:55:58.7239608-05:00;False|2022-05-04T10:54:22.1240609-05:00;False|2022-05-04T10:53:41.1405248-05:00;False|2022-02-14T16:59:29.8747239-05:00;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="AngleSharp.dll">
+      <publishTime>07/10/2021 02:10:18</publishTime>
+    </File>
+    <File Include="appsettings.Development.json">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="appsettings.json">
+      <publishTime>01/04/2022 17:50:56</publishTime>
+    </File>
+    <File Include="aws-beanstalk-tools-defaults.json">
+      <publishTime>04/05/2022 10:33:37</publishTime>
+    </File>
+    <File Include="Newtonsoft.Json.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="samishop-netcore-web-store.deps.json">
+      <publishTime>04/05/2022 10:57:16</publishTime>
+    </File>
+    <File Include="samishop-netcore-web-store.dll">
+      <publishTime>04/05/2022 10:57:16</publishTime>
+    </File>
+    <File Include="samishop-netcore-web-store.exe">
+      <publishTime>04/05/2022 10:57:16</publishTime>
+    </File>
+    <File Include="samishop-netcore-web-store.pdb">
+      <publishTime>04/05/2022 10:57:16</publishTime>
+    </File>
+    <File Include="samishop-netcore-web-store.runtimeconfig.json">
+      <publishTime>04/05/2022 10:53:27</publishTime>
+    </File>
+    <File Include="web.config">
+      <publishTime>04/05/2022 10:57:23</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

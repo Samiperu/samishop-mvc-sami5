@@ -1,0 +1,227 @@
+﻿<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<section class="section-content padding-y bg">
+<div class="container">
+
+<!-- ============================ COMPONENT 3 ================================= -->
+<div class="card">
+	<div class="row no-gutters">
+		<aside class="col-sm-6 border-right">
+<article class="gallery-wrap"> 
+	<div class="img-big-wrap">
+	   <a href="#"><img src="https://storage.googleapis.com/sspe-blnc-rscs/00000C79/productos/imagenes/PB2BL0000287400101010206REVR00.jpg"></a>
+	</div> <!-- img-big-wrap.// -->
+	<div class="thumbs-wrap">
+	  <a href="#" class="item-thumb"> <img src="https://storage.googleapis.com/sspe-blnc-rscs/00000C79/productos/imagenes/PB2BL0000287400101010206REVR00.jpg"></a>
+	  <a href="#" class="item-thumb"> <img src="https://storage.googleapis.com/sspe-blnc-rscs/00000C79/productos/imagenes/PB2_TALLAS.jpg"></a>
+	  <a href="#" class="item-thumb"> <img src="https://storage.googleapis.com/sspe-blnc-rscs/00000C79/productos/imagenes/LOGO_2874001010206.jpg"></a>
+	</div> <!-- thumbs-wrap.// -->
+</article> <!-- gallery-wrap .end// -->
+		</aside>
+		<main class="col-sm-6">
+<article class="content-body">
+	<h3 class="title">Polo Camisa de Mujer Insignia Peru</h3>
+	<div class="rating-wrap mb-3">
+		<span class="badge badge-warning"> <i class="fa fa-star"></i> 9.6</span>
+		<small class="text-muted ml-2">81 comentarios</small>
+	</div>
+	<p>Polo hecho de 100% algodón, es cómodo y lavable a máquina. Es el regalo ideal para cumpleaños, navidad, año nuevo, fiestas patrias, graduación, día de san valentín o alguna otra celebración.<br> Ante alguna duda póngase en contacto con nuestro servicio al cliente y estarán encantados de ayudarle.</br>Tenemos más de 25 años enviando polos y sudaderas a todo el mundo.</p>
+
+<ul class="list-check mb-4">
+	<li>Telas de calidad</li>
+	<li>Diseño moderno</li>
+	<li>Producto peruano</li>
+</ul>
+
+<div class="row mt-3 align-items-center">
+	<div class="col">
+		<span class="price h4">S/. 55.99</span> 
+	</div> <!-- col.// -->
+	<div class="col text-right">
+		<a href="#" class="btn  btn-primary"> <span class="text">Agregar al carrito</span> <i class="icon fas fa-shopping-cart"></i>  </a>
+		<a href="#" class="btn  btn-light"> <i class="fas fa-heart"></i>  </a>
+		<a href="#" class="btn  btn-light"> <i class="fa fa-folder-plus"></i>  </a>
+	</div> <!-- col.// -->
+</div> <!-- row.// -->
+
+</article> <!-- product-info-aside .// -->
+		</main> <!-- col.// -->
+	</div> <!-- row.// -->
+</div> <!-- card.// -->
+<!-- ============================ COMPONENT 3 END .// ================================= -->
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+	$( document ).ready(async function() {
+		var c_name = "cookie_checkout";
+
+		const idproducto = 2;
+		const saleform = "tupolo-pe";
+		const response = await fetch("https://ssidk-catalogo.herokuapp.com/datoscatalogo/saleform/" + saleform + "/idproducto/" + idproducto, {
+			method: 'GET', // *GET, POST, PUT, DELETE, etc.
+			//mode: 'no-cors', // no-cors, *cors, same-origin
+			//cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+			//credentials: 'same-origin', // include, *same-origin, omit
+			headers: {
+				'Content-Type': 'application/json'
+				// 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			//redirect: 'follow', // manual, *follow, error
+			//referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			//body: JSON.stringify(data) // body data type must match "Content-Type" header
+		});
+
+		if(response.ok){
+			let result = await response.json();
+
+			const datos_Catalogo_sku_padre = result.obj.datos_Catalogo[0].sku_padre;
+			const datos_Catalogo_item_title = result.obj.datos_Catalogo[0].item_title;
+			const datos_Catalogo_tags_promociones = result.obj.datos_Catalogo[0].tags_promociones;
+			const datos_Catalogo_url_producto = result.obj.datos_Catalogo[0].url_producto;
+
+			let datos_variaciones_price;
+			let datos_variaciones_sale_price;
+			let datos_variaciones_cantidad;
+			let datos_variaciones_atributo1_titulo;
+			let datos_variaciones_atributo1_valor;
+			let datos_variaciones_atributo2_titulo;
+			let datos_variaciones_atributo2_valor;
+			let datos_variaciones_atributo3_titulo;
+			let datos_variaciones_atributo3_valor;
+			let datos_variaciones_url1_imagen_sku;
+
+
+			const sku = "TZ0ABWH00181780101010206WH00002XL";
+			const datos_variaciones_quantity = 1;
+			const datos_variaciones_disccount = 0;
+
+			for (i = 0; i < result.obj.datos_variaciones.length; i++) {
+				if (result.obj.datos_variaciones[i].sku === sku) {
+					datos_variaciones_price = result.obj.datos_variaciones[i].price;
+					datos_variaciones_sale_price = result.obj.datos_variaciones[i].sale_price;
+					datos_variaciones_cantidad = result.obj.datos_variaciones[i].cantidad;
+					datos_variaciones_atributo1_titulo = result.obj.datos_variaciones[i].atributo1_titulo;
+					datos_variaciones_atributo1_valor = result.obj.datos_variaciones[i].atributo1_valor;
+					datos_variaciones_atributo2_titulo = result.obj.datos_variaciones[i].atributo2_titulo;
+					datos_variaciones_atributo2_valor = result.obj.datos_variaciones[i].atributo2_valor;
+					datos_variaciones_atributo3_titulo = result.obj.datos_variaciones[i].atributo3_titulo;
+					datos_variaciones_atributo3_valor = result.obj.datos_variaciones[i].atributo3_valor;
+					datos_variaciones_url1_imagen_sku = result.obj.datos_variaciones[i].url1_imagen_sku;
+
+					break;
+				}
+			}
+
+			var productValue = {
+				"sku": datos_Catalogo_sku_padre,
+				"item_title": datos_Catalogo_item_title,
+				//hacer un for y validar por datos_variaciones y validar por sku
+				"price": datos_variaciones_price,
+				"sale_price": datos_variaciones_sale_price,
+				"quantity": datos_variaciones_quantity, //html
+				"cantidad": datos_variaciones_cantidad,
+				"atributo1_titulo": datos_variaciones_atributo1_titulo,
+				"atributo1_valor": datos_variaciones_atributo1_valor,
+				"atributo2_titulo": datos_variaciones_atributo2_titulo,
+				"atributo2_valor": datos_variaciones_atributo2_valor,
+				"atributo3_titulo": datos_variaciones_atributo3_titulo,
+				"atributo3_valor": datos_variaciones_atributo3_valor,
+				"observacion": "",//html
+				"tags_promociones": datos_Catalogo_tags_promociones,
+				"url1_imagen_sku" : datos_variaciones_url1_imagen_sku,
+				"url_producto": datos_Catalogo_url_producto
+			}
+			
+			console.log(productValue);
+
+			if(getCookie(c_name) != null){
+				let cart = JSON.parse(getCookie(c_name));
+
+				let cardResult = setProduct(cart, productValue);
+				document.cookie = c_name + "=" + JSON.stringify(cardResult) + "; path=/";
+			}
+			else{
+				let items = {
+					products: [],
+					summary:{
+							"subTotal": 0,
+							"disccount": 0,
+							"quantity": 0,
+							"total": 0
+					}
+				};
+
+				items.products.push(productValue);
+				var exdays = 60*60*24*30*6;
+				setCookie(c_name, JSON.stringify(items), exdays);
+			}
+
+			function setProduct(cart, product) {
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == product.sku) {
+
+						const subtotalTemp = datos_variaciones_sale_price * datos_variaciones_quantity;
+
+
+						cart.products[i].sku = datos_Catalogo_sku_padre;
+						cart.products[i].item_title = datos_Catalogo_item_title;
+						//hacer un for y validar por datos_variaciones y validar por sku
+						cart.products[i].price = datos_variaciones_price;
+						cart.products[i].sale_price = datos_variaciones_sale_price;
+						cart.products[i].quantity = cart.products[i].quantity + datos_variaciones_quantity; //html
+						cart.products[i].cantidad = datos_variaciones_cantidad;
+						cart.products[i].atributo1_titulo = datos_variaciones_atributo1_titulo;
+						cart.products[i].atributo1_valor = datos_variaciones_atributo1_valor;
+						cart.products[i].atributo2_titulo = datos_variaciones_atributo2_titulo;
+						cart.products[i].atributo2_valor = datos_variaciones_atributo2_valor;
+						cart.products[i].atributo3_titulo = datos_variaciones_atributo3_titulo;
+						cart.products[i].atributo3_valor = datos_variaciones_atributo3_valor;
+						cart.products[i].observacion = "";//html
+						cart.products[i].tags_promociones = datos_Catalogo_tags_promociones;
+						cart.products[i].url1_imagen_sku = datos_variaciones_url1_imagen_sku;
+						cart.products[i].url_producto = datos_Catalogo_url_producto;
+						
+						cart.summary.subTotal = 0;
+						cart.summary.disccount = 0;
+						cart.summary.quantity = 0;
+						cart.summary.total = 0;
+						return cart;
+					}
+				}
+
+				cart.products.push(product);
+
+				cart.summary.subTotal = 0;
+				cart.summary.disccount = 0;
+				cart.summary.quantity = 0;
+				cart.summary.total = 0;
+
+				return cart;
+			}
+
+			function setCookie(c_name, value, exdays) {
+				var exdate = new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+				document.cookie = c_name + "=" + c_value + "; path=/";
+			}
+		
+			function getCookie(c_name) {
+				var i, x, y, ARRcookies = document.cookie.split(";");
+				for (i = 0; i < ARRcookies.length; i++) {
+					x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+					y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+					x = x.replace(/^\s+|\s+$/g, "");
+					if (x == c_name) {
+						return unescape(y);
+					}
+				}
+			}
+		}
+		else{
+			console.log("No responde");
+		}
+	});
+	
+	</script>

@@ -1,0 +1,518 @@
+﻿<link href="https://storage.googleapis.com/sspe-blnc-rscs/recursos_samiv2/fonts/feathericons/css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="https://storage.googleapis.com/sspe-blnc-rscs/recursos_samiv2/fonts/material-icons/css/materialdesignicons.css" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<section class="section-pagetop bg">
+<div class="container">
+	<h2 class="title-page">Carro de compras</h2>
+</div> <!-- container //  -->
+</section>
+
+<section class="section-content padding-y">
+
+
+<div class="container">
+
+<div class="row">
+	<main class="col-md-9">
+
+<div class="card">
+
+<table class="table table-borderless table-shopping-cart">
+<thead class="text-muted">
+<tr class="small text-uppercase">
+  <th scope="col" width="430">Producto</th>
+  <th scope="col" width="120">Cantidad</th>
+  <th scope="col" width="120">Precio</th>
+  <th scope="col" width="120">Subtotal</th>
+  <th scope="col" class="text-right" width="200"> </th>
+</tr>
+</thead>
+<tbody id="products_items">
+
+</tbody>
+</table>
+
+</div> <!-- card.// -->
+
+
+
+	</main> <!-- col.// -->
+	<aside class="col-md-3">
+		<div class="card mb-3">
+		<div class="card-body">
+				<dl class="dlist-align">
+				  <dt>Precio total:</dt>
+				  <dd class="text-right">S/. <span id="total_price"></span></dd>
+				</dl>
+				<dl class="dlist-align">
+				  <dt>Descuento:</dt>
+				  <dd class="text-right text-danger">- S/. <span id="total_discount"></span></dd>
+				</dl>
+				<dl class="dlist-align">
+				  <dt>Total:</dt>
+				  <dd class="text-right text-dark b"><strong>S/. <span id="total_total"></span></strong></dd>
+				</dl>
+				<hr>
+				<a href="#" class="btn btn-primary btn-block" id="to_buy">  Ir a pagar </a>
+				<a href="#" class="btn btn-light btn-block">Continuar comprando</a>
+			</div> <!-- card-body.// -->
+		</div>  <!-- card .// -->
+
+	</aside> <!-- col.// -->
+</div>
+
+</div> <!-- container .//  -->
+</section>
+	<!-- ========================= SECTION CONTENT END// ========================= -->
+	
+	<script>
+		$( document ).ready(function() {
+		let html_product = `
+
+<tr id="product_section" name="[[PRODUCT_SKU]]">
+	<td>
+		<figure class="itemside">
+			<div class="aside"><img src="[[PRODUCT_IMG]]" class="img-sm" width="20" height="20"></div>
+			<figcaption class="info">
+				<a href="#" class="title text-dark">[[PRODUCT_TITLE]]</a>
+				<p class="text-muted small">Size: XL, Color: blue, <br> Brand: Gucci</p>
+				<a href="#" class="btn-link text-danger" id="product_delete" name="[[PRODUCT_SKU]]" style="
+    color: #9c2121 !important;
+    font-size: 12px;
+    border-bottom: 1px solid;
+"> Eliminar</a>
+			</figcaption>
+		</figure>
+		
+	</td>
+	<td> 
+<div class="input-group input-spinner"> 
+<div class="input-group-prepend"> 
+
+
+
+<button class="btn btn-light" type="button" id="button-minus" name="[[PRODUCT_SKU]]"> <i class="fa fa-minus"></i> </button> 
+ </div> 
+
+ <input type="text" class="form-control" id="product_quantity" name="[[PRODUCT_SKU]]" value="[[PRODUCT_QUANTITY]]"> 
+
+ <div class="input-group-append"> 
+ 
+
+<button class="btn btn-light" type="button" id="button-plus" name="[[PRODUCT_SKU]]"> 
+<i class="fa fa-plus"></i> </button>
+
+
+ </div> 
+ </div>
+<em class="alert-danger" id="product_message" name="[[PRODUCT_SKU]]" style="
+    font-size: 11px;
+    display: block;
+    text-align: center;
+"></em>
+	</td>
+	<td> 
+		<div class="price-wrap"> 
+			<var class="price">S/. [[PRODUCT_PRICE]]</var> 
+			<small class="text-muted"> S/. 00.00 </small> 
+		</div> <!-- price-wrap .// -->
+		
+	</td>
+	<td>
+<div class="price-wrap"> 
+			<var class="price">S/. <span id="product_subtotal" name="[[PRODUCT_SKU]]">[[PRODUCT_SUBTOTAL]]<span></var> 
+		</div> 
+
+	 </td>
+	<td class="text-right"> 
+	<a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
+	
+	</td>
+</tr>`;
+var c_name = "cookie_checkout";
+		chech_to_buy_jquey(c_name);
+
+			let cart = JSON.parse(getCookie(c_name));
+
+			cart.summary.subTotal = 0;
+			cart.summary.disccount = 0;
+			cart.summary.quantity = 0;
+			cart.summary.total = 0;
+
+			for (i = 0; i < cart.products.length; i++) {
+				if (cart.products[i] != null) {
+					const datos_variaciones_price = cart.products[i].price;
+					const datos_variaciones_sale_price = cart.products[i].sale_price;
+
+					const datos_variaciones_quantity = cart.products[i].quantity;
+					const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+					const datos_variaciones_disccount = (datos_variaciones_price - datos_variaciones_sale_price) * datos_variaciones_quantity;
+
+					const subtotal = datos_variaciones_price * datos_variaciones_quantity;
+
+					cart.summary.subTotal = cart.summary.subTotal  + subtotal;
+					cart.summary.disccount = cart.summary.disccount + datos_variaciones_disccount;
+					cart.summary.quantity = cart.summary.quantity + datos_variaciones_quantity;
+					cart.summary.total = cart.summary.subTotal - cart.summary.disccount;
+				}
+			}
+			document.cookie = c_name + "=" + JSON.stringify(cart) + "; path=/";
+			cart = null;
+
+			if(getCookie(c_name) != null){
+				const cart = JSON.parse(getCookie(c_name));
+
+				const cart_summary_subTotal = cart.summary.subTotal || 0.00;
+				const cart_summary_disccount = cart.summary.disccount || 0.00;
+				const cart_summary_total = cart.summary.total || 0.00;
+
+				let html_product_edit_general = "";
+
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null) {
+						const datos_Catalogo_sku_padre = cart.products[i].sku || "";
+						const datos_Catalogo_item_title = cart.products[i].item_title || "";
+						const datos_variaciones_sale_price = cart.products[i].sale_price || 0;
+						const datos_variaciones_sale = cart.products[i].sale || 0;
+						const datos_variaciones_quantity = cart.products[i].quantity || 0;
+						const datos_variaciones_url1_imagen_sku = cart.products[i].url1_imagen_sku || "";
+
+						const SubTotaProduct = (datos_variaciones_sale_price)*datos_variaciones_quantity;
+
+						html_product_edit = html_product;
+						html_product_edit = html_product_edit.replace("[[PRODUCT_IMG]]", datos_variaciones_url1_imagen_sku);
+						html_product_edit = html_product_edit.replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title);
+						html_product_edit = html_product_edit.replace("[[PRODUCT_PRICE]]", datos_variaciones_sale_price);
+						html_product_edit = html_product_edit.replace("[[PRODUCT_QUANTITY]]", datos_variaciones_quantity);
+						html_product_edit = html_product_edit.replaceAll("[[PRODUCT_SKU]]", datos_Catalogo_sku_padre);
+						html_product_edit = html_product_edit.replaceAll("[[PRODUCT_SUBTOTAL]]", SubTotaProduct);
+
+						html_product_edit_general = html_product_edit_general + html_product_edit;
+					}
+				}
+				var products_items = document.getElementById("products_items");
+				products_items.innerHTML = html_product_edit_general;
+
+				document.getElementById("total_price").textContent= cart_summary_subTotal.toFixed(2);
+				document.getElementById("total_discount").textContent = cart_summary_disccount.toFixed(2);
+				document.getElementById("total_total").textContent = cart_summary_total.toFixed(2);
+
+				chech_to_buy_jquey(c_name);
+			}
+
+			function getCookie(c_name) {
+				var i, x, y, ARRcookies = document.cookie.split(";");
+				for (i = 0; i < ARRcookies.length; i++) {
+					x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+					y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+					x = x.replace(/^\s+|\s+$/g, "");
+					if (x == c_name) {
+						return unescape(y);
+					}
+				}
+			}
+		
+			$(document).on( "click", "#button-plus", function() {
+				const sku = $(this).attr('name');
+				const is_valid = calculateValidQuantityPlus(sku);
+				if(is_valid === true){
+					$("[id='product_message'][name='" + sku + "']").text("");
+					const cartResult = calculateCartPlus(sku);
+					document.cookie = c_name + "=" + JSON.stringify(cartResult) + "; path=/";
+				}
+				else{
+					$("[id='product_message'][name='" + sku + "']").text("No tenemos stock suficiente");
+				}
+			});
+			$(document).on( "click", "#button-minus", function() {
+				const sku = $(this).attr('name');
+				const is_valid = calculateValidQuantityMinus(sku);
+				if(is_valid === true){
+					$("[id='product_message'][name='" + sku + "']").text("");
+					const cartResult = calculateCartMinus(sku);
+					document.cookie = c_name + "=" + JSON.stringify(cartResult) + "; path=/";
+				}
+				else{
+					asignateQuantityProductChange(sku, 1);
+				}
+			});
+			$(document).on("keyup", "#product_quantity", function() {
+				const sku = $(this).attr('name');
+				let quantity = $(this).val();
+				const is_valid = calculateValidQuantityKeypress(sku, quantity);
+				if(is_valid === false){
+					$("[id='product_message'][name='" + sku + "']").text("No tenemos stock suficiente");
+				}
+				else{
+					$("[id='product_message'][name='" + sku + "']").text("");
+				}
+			});
+			$(document).on("change", "#product_quantity", function() {
+				const sku = $(this).attr('name');
+				let quantity =  $(this).val();
+				$("[id='product_message'][name='" + sku + "']").text("");
+
+				if(quantity <= 0 || quantity === null || quantity === ""){
+					quantity = 1;
+				}
+				const is_valid = calculateValidQuantityChange(sku, quantity);
+				if(is_valid === true){
+					const cartResult = calculateCart(sku, quantity);
+					document.cookie = c_name + "=" + JSON.stringify(cartResult) + "; path=/";
+				}
+
+				chech_to_buy_jquey(c_name);
+			});
+			$(document).on("click", "#product_delete", function() {
+				const sku = $(this).attr('name');
+				const cartResult = setProductDelete(sku);
+				setProductDeleteElement(sku);
+				document.cookie = c_name + "=" + JSON.stringify(cartResult) + "; path=/";
+				chech_to_buy_jquey(c_name);
+			});
+
+			function chech_to_buy(c_name) {
+				let cart = JSON.parse(getCookie(c_name));
+				if (cart.summary.total <= 0) {
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
+			function chech_to_buy_jquey(c_name) {
+				$("#to_buy").removeClass( "disabled" );
+				if(chech_to_buy(c_name) != true)
+				{
+					$("#to_buy").last().addClass( "disabled" );
+				}
+			}
+			function calculateValidQuantityPlus(sku) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+
+						const datos_variaciones_quantity = cart.products[i].quantity;
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+						if(datos_variaciones_cantidad > datos_variaciones_quantity){
+							return true;
+						}
+						return false;
+					}
+				}
+				return false;
+			}
+			function calculateValidQuantityMinus(sku) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const datos_variaciones_quantity = cart.products[i].quantity - 1;
+						if(datos_variaciones_quantity > 0){
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+			function calculateValidQuantityKeypress(sku, quantity) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+						if(datos_variaciones_cantidad >= quantity){
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				}
+				return false;
+			}
+			function calculateValidQuantityChange(sku, quantity) {
+				let cart = JSON.parse(getCookie(c_name));
+				let datos_variaciones_quantity = 0;
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+						datos_variaciones_quantity = cart.products[i].quantity;
+						if(datos_variaciones_cantidad < quantity){
+							asignateQuantityProductChange(sku, datos_variaciones_quantity);
+							return false;
+						}
+						else
+						{
+							asignateQuantityProductChange(sku, quantity);
+							return true;
+						}
+					}
+				}
+				asignateQuantityProductChange(sku, datos_variaciones_quantity);
+				return true;
+			}
+			function asignateQuantityProduct(sku, value, subTotal, disccount, total) {
+				$("[id='product_quantity'][name='"+ sku + "']").val(value);
+				$("[id='product_message'][name='" + sku + "']").text("");
+
+				document.getElementById("total_price").textContent= subTotal.toFixed(2);
+				document.getElementById("total_discount").textContent = disccount.toFixed(2);
+				document.getElementById("total_total").textContent = total.toFixed(2);
+			}
+			function asignateQuantityProductChange(sku, quantity) {
+				$("[id='product_quantity'][name='"+ sku + "']").val(quantity);
+			}
+			function calculateCartPlus(sku) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const value = 1;
+						const datos_variaciones_price = cart.products[i].price;
+						const datos_variaciones_sale_price = cart.products[i].sale_price;
+
+						const datos_variaciones_quantity_temp = cart.products[i].quantity;
+						const datos_variaciones_quantity = datos_variaciones_quantity_temp + value;
+
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+						const datos_variaciones_disccount_temp = (datos_variaciones_price - datos_variaciones_sale_price) * datos_variaciones_quantity;
+						const datos_variaciones_disccount = (datos_variaciones_price - datos_variaciones_sale_price) * (datos_variaciones_quantity + value);
+
+						const subtotal_temp = datos_variaciones_price * datos_variaciones_quantity;
+						const subtotal = datos_variaciones_price * (datos_variaciones_quantity + value);
+
+						const subtotal_product = datos_variaciones_sale_price*datos_variaciones_quantity;
+						setProductSubTotalElement(sku, subtotal_product);
+
+						cart.products[i].quantity = datos_variaciones_quantity;
+
+						cart.products[i].observacion = "";
+						
+						cart.summary.subTotal = (cart.summary.subTotal - subtotal_temp) + subtotal;
+						cart.summary.disccount = (cart.summary.disccount - datos_variaciones_disccount_temp) + datos_variaciones_disccount;
+						cart.summary.quantity = (cart.summary.quantity - datos_variaciones_quantity_temp) + datos_variaciones_quantity;
+						cart.summary.total = cart.summary.subTotal - cart.summary.disccount;
+
+						asignateQuantityProduct(sku, datos_variaciones_quantity, cart.summary.subTotal, cart.summary.disccount, cart.summary.total);
+
+						return cart;
+					}
+				}
+			}
+			function calculateCartMinus(sku) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const value = -1;
+						const datos_variaciones_price = cart.products[i].price;
+						const datos_variaciones_sale_price = cart.products[i].sale_price;
+
+						const datos_variaciones_quantity_temp = cart.products[i].quantity;
+						const datos_variaciones_quantity = datos_variaciones_quantity_temp + value;
+
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+						const datos_variaciones_disccount_temp = (datos_variaciones_price - datos_variaciones_sale_price) * datos_variaciones_quantity;
+						const datos_variaciones_disccount = (datos_variaciones_price - datos_variaciones_sale_price) * (datos_variaciones_quantity + value);
+
+						const subtotal_temp = datos_variaciones_price * datos_variaciones_quantity;
+						const subtotal = datos_variaciones_price * (datos_variaciones_quantity + value);
+
+						const subtotal_product = datos_variaciones_sale_price*datos_variaciones_quantity;
+						setProductSubTotalElement(sku, subtotal_product);
+
+						cart.products[i].quantity = datos_variaciones_quantity;
+
+						cart.products[i].observacion = "";
+						
+						cart.summary.subTotal = (cart.summary.subTotal - subtotal_temp) + subtotal;
+						cart.summary.disccount = (cart.summary.disccount - datos_variaciones_disccount_temp) + datos_variaciones_disccount;
+						cart.summary.quantity = (cart.summary.quantity - datos_variaciones_quantity_temp) + datos_variaciones_quantity;
+						cart.summary.total = cart.summary.subTotal - cart.summary.disccount;
+
+						asignateQuantityProduct(sku, datos_variaciones_quantity, cart.summary.subTotal, cart.summary.disccount, cart.summary.total);
+
+						return cart;
+					}
+				}
+			}
+			function calculateCart(sku, quantity) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const value = quantity - cart.products[i].quantity;
+
+						const datos_variaciones_price = cart.products[i].price;
+						const datos_variaciones_sale_price = cart.products[i].sale_price;
+
+						const datos_variaciones_quantity_temp = cart.products[i].quantity;
+						const datos_variaciones_quantity = datos_variaciones_quantity_temp + value;
+
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+						const datos_variaciones_disccount_temp = (datos_variaciones_price - datos_variaciones_sale_price) * datos_variaciones_quantity;
+						const datos_variaciones_disccount = (datos_variaciones_price - datos_variaciones_sale_price) * (datos_variaciones_quantity + value);
+
+						const subtotal_temp = datos_variaciones_price * datos_variaciones_quantity;
+						const subtotal = datos_variaciones_price * (datos_variaciones_quantity + value);
+
+						console.log(datos_variaciones_disccount)
+						console.log(subtotal)
+
+						const subtotal_product = datos_variaciones_sale_price*quantity;
+						setProductSubTotalElement(sku, subtotal_product);
+
+						cart.products[i].quantity = datos_variaciones_quantity;
+
+						cart.products[i].observacion = "";
+						
+						cart.summary.subTotal = (cart.summary.subTotal - subtotal_temp) + subtotal;
+						cart.summary.disccount = (cart.summary.disccount - datos_variaciones_disccount_temp) + datos_variaciones_disccount;
+						cart.summary.quantity = (cart.summary.quantity - datos_variaciones_quantity_temp) + datos_variaciones_quantity;
+						cart.summary.total = cart.summary.subTotal - cart.summary.disccount;
+
+						asignateQuantityProduct(sku, datos_variaciones_quantity, cart.summary.subTotal, cart.summary.disccount, cart.summary.total);
+
+						return cart;
+					}
+				}
+			}
+			function setProductDelete(sku) {
+				let cart = JSON.parse(getCookie(c_name));
+				for (i = 0; i < cart.products.length; i++) {
+					if (cart.products[i] != null && cart.products[i].sku == sku) {
+						const datos_variaciones_price = cart.products[i].price;
+						const datos_variaciones_sale_price = cart.products[i].sale_price;
+
+						const datos_variaciones_quantity = cart.products[i].quantity;
+						const datos_variaciones_cantidad = cart.products[i].cantidad;
+
+						const datos_variaciones_disccount = (datos_variaciones_price - datos_variaciones_sale_price) * datos_variaciones_quantity;
+
+						const subtotal = datos_variaciones_price * datos_variaciones_quantity;
+
+						delete cart.products.splice(i,1);
+					
+						cart.summary.subTotal = cart.summary.subTotal  - subtotal;
+						cart.summary.disccount = cart.summary.disccount - datos_variaciones_disccount;
+						cart.summary.quantity = cart.summary.quantity - datos_variaciones_quantity;
+						cart.summary.total = cart.summary.total - (subtotal - datos_variaciones_disccount);
+
+						asignateQuantityProduct(sku, datos_variaciones_quantity, cart.summary.subTotal, cart.summary.disccount, cart.summary.total);
+
+						return cart;
+					}
+				}
+			}
+			function setProductDeleteElement(sku) {
+				$("[id='product_section'][name='" + sku + "']").remove();
+			}
+			function setProductSubTotalElement(sku, value) {
+				$("[id='product_subtotal'][name='" + sku + "']").text(value);
+			}
+		});
+
+	</script>

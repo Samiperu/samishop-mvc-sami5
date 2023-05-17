@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\samishop-netcore-web-store.props" />
+</Project>

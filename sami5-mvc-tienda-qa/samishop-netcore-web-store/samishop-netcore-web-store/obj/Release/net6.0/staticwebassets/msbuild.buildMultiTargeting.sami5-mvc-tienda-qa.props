@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\sami5-mvc-tienda-qa.props" />
+</Project>
