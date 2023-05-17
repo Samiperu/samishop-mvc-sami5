@@ -63,6 +63,7 @@ namespace SamishopV2_Template_1.Controllers
                 string cookieDomainLogin = Request.Cookies["domain_login"];
 
                 urlName3 = hostFolderClientHost;
+                //urlName3 = "mericitienda6.s1a2m3i4.com";
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -940,19 +941,47 @@ namespace SamishopV2_Template_1.Controllers
                 {
                     urlName = "home";
                 }
-
+                /*
+                var pages = resultHeader[0].pageList;
+                int pagina = -1;
+                for (int i = 0; i < pages.Count; i++)
+                {
+                    if (urlName == (string)pages[i].urlWeb)
+                    {
+                        pagina = i;
+                        break;
+                    }
+                }
+                */
                 string meta_titulo = urlName;
                 string meta_imagen = "";
                 string meta_description = "";
                 string meta_clave = "";
-
-                meta_titulo = resultHeader[0].ss_titulo_tienda;
-                meta_description = resultHeader[0].ss_descripcion_tienda;
-                meta_imagen = resultHeader[0].ss_url_logo_head;
-
-                htmlFather = htmlFather.Replace("[[OG_TITULO]]", meta_titulo );
+                /*
+                if (pagina > -1)
+                {
+                    var result_obj_header = resultHeader[0].pageList[pagina];
+                    meta_titulo = result_obj_header.metaTitle;
+                    meta_imagen = result_obj_header.metaImagen;
+                    meta_description = result_obj_header.metaDescripcion;
+                    meta_clave = result_obj_header.metaClave;
+                }
+                */
+                
+                    meta_titulo = resultHeader[0].ss_titulo_tienda;
+                    meta_description = resultHeader[0].ss_descripcion_tienda;
+                    meta_imagen = resultHeader[0].ss_url_logo_head;
+                
+                if (paginacontenido)
+                {
+                    htmlFather = htmlFather.Replace("[[OG_TITULO]]", process);
+                }
+                else
+                {
+                    htmlFather = htmlFather.Replace("[[OG_TITULO]]", meta_titulo);
+                }
                 htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", meta_description);
-                htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", "");
+                htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", meta_clave);
                 htmlFather = htmlFather.Replace("[[OG_PRINCIPAL_IMAGE]]", meta_imagen);
             }
             htmlFather = htmlFather.Replace("[[URL_CDN_STORAGE]]", UrlCdnClient + UrlDefaultTemplate);
