@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\sami5-mvc-backoffice-qa.props" />
-</Project>
