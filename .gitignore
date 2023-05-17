@@ -1,4 +1,6 @@
 ### DotnetCore ###
 # .NET Core build folders
-bin/
-obj/
+/sami5-mvc-tienda-qa/samishop-netcore-web-store/samishop-netcore-web-store/bin
+/sami5-mvc-tienda-qa/samishop-netcore-web-store/samishop-netcore-web-store/obj
+/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/bin
+/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/obj
