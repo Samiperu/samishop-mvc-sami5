@@ -285,7 +285,7 @@ namespace SamishopV2_Template_1.Controllers
                                 }
                                 else
                                 {
-                                    urlName = urlName.ToLower();
+                                    urlName = urlName.ToLower(); 
                                 }
                             }
 

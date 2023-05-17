@@ -9,17 +9,17 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SamishopV2_Template_1
 build_property.RootNamespace = SamishopV2_Template_1
-build_property.ProjectDir = D:\sami5Final\sami5-mvc-backoffice-qa\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\
+build_property.ProjectDir = D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\sami5Final\sami5-mvc-backoffice-qa\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store
+build_property.MSBuildProjectDirectory = D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/sami5Final/sami5-mvc-backoffice-qa/samishop-mvc-sami5/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/Views/Home/Cookie.cshtml]
+[D:/sami5/PROD/samishop-mvc-sami5/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/Views/Home/Cookie.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb29raWUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/sami5Final/sami5-mvc-backoffice-qa/samishop-mvc-sami5/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/Views/Home/Shopcart.cshtml]
+[D:/sami5/PROD/samishop-mvc-sami5/sami5-mvc-backoffice-qa/samishop-netcore-web-store/samishop-netcore-web-store/Views/Home/Shopcart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaG9wY2FydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
