@@ -1,0 +1,10 @@
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\sami5-mvc-backoffice-qa.exe
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\appsettings.json
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\aws-beanstalk-tools-defaults.json
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\sami5-mvc-backoffice-qa.dll
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\sami5-mvc-backoffice-qa.deps.json
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\sami5-mvc-backoffice-qa.runtimeconfig.json
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\sami5-mvc-backoffice-qa.pdb
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\AngleSharp.dll
+D:\sami5\PROD\samishop-mvc-sami5\sami5-mvc-backoffice-qa\samishop-netcore-web-store\samishop-netcore-web-store\obj\Release\net6.0\PubTmp\Out\Newtonsoft.Json.dll
