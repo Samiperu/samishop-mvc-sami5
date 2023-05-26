@@ -63,7 +63,7 @@ namespace SamishopV2_Template_1.Controllers
                 string cookieDomainLogin = Request.Cookies["domain_login"];
 
                 urlName3 = hostFolderClientHost;
-                urlName3 = "mericitienda6.s1a2m3i4.com";
+                
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -968,7 +968,7 @@ namespace SamishopV2_Template_1.Controllers
                 }
                 */
                 
-                    meta_titulo = resultHeader[0].ss_titulo_tienda;
+                    meta_titulo = resultHeader[0].ss_nombre_tienda;
                     meta_description = resultHeader[0].ss_descripcion_tienda;
                     meta_imagen = resultHeader[0].ss_url_logo_head;
                 
