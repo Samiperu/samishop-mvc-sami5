@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using static System.Net.WebRequestMethods;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace SamishopV2_Template_1.Controllers
@@ -40,6 +41,15 @@ namespace SamishopV2_Template_1.Controllers
             string SaleformJavascript = configurationSetting["SaleformJavascript"];
             string tokenAccessSystem = configurationSetting["TokenAccessSystem"];
 
+            string hexPaletaColores = "{" +
+                "green: {color1: '#E3E8C9',color2: '#CED69A',color3: '#A9B546',color4: '#777C56'}," +
+                "blue: {color1: '#C9D4E8',color2: '#CED69A',color3: '#4672B5',color4: '#56617C'}," +
+                "purple: {color1: '#D7C9E8',color2: '#B49AD6',color3: '#7746B5',color4: '#62567C'}," +
+                "red: {color1: '#E8C9C9',color2: '#D69A9A',color3: '#B54646',color4: '#7C5656'}," +
+                "orange: {color1: '#FFD9BE',color2: '#E5AC78',color3: '#D47540',color4: '#7C6156'}," +
+                "dark: {color1: '#EBEBEB',color2: '#C8C8C8',color3: '#959595',color4: '#585858'}" +
+            "}";
+
             bool BoolVariableRequieredLogin = false;
             bool BoolVariableIsActive = true;
             bool BoolEsAdmin = false;
@@ -63,7 +73,7 @@ namespace SamishopV2_Template_1.Controllers
                 string cookieDomainLogin = Request.Cookies["domain_login"];
 
                 urlName3 = hostFolderClientHost;
-                
+                urlName3 = "samiprueba.s1a2m3i4.com";
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -575,11 +585,11 @@ namespace SamishopV2_Template_1.Controllers
                                                 {
                                                     string NewProductVariationItemHtml = ProductVariationItemHtml;
                                                     NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-
+                                                    
                                                     AllProductVariationItemHtml = AllProductVariationItemHtml + NewProductVariationItemHtml;
                                                 }
                                             }
-
+                                            
                                             NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml);
                                             NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle);
 
@@ -922,6 +932,7 @@ namespace SamishopV2_Template_1.Controllers
                             htmlFather = htmlFather.Replace("[[OG_TITULO]]", titulo_categoria);
                             htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", descripcion_categoria);
                             htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", palabras_categoria);
+
                         }
 
                     }
@@ -957,6 +968,8 @@ namespace SamishopV2_Template_1.Controllers
                 string meta_imagen = "";
                 string meta_description = "";
                 string meta_clave = "";
+                string aux_meta_color = "";
+
                 /*
                 if (pagina > -1)
                 {
@@ -967,11 +980,50 @@ namespace SamishopV2_Template_1.Controllers
                     meta_clave = result_obj_header.metaClave;
                 }
                 */
+                dynamic colores = JsonConvert.DeserializeObject(hexPaletaColores);
+
+                meta_titulo = resultHeader[0].ss_nombre_tienda;
+                meta_description = resultHeader[0].ss_descripcion_tienda;
+                meta_imagen = resultHeader[0].ss_url_logo_head;
+                aux_meta_color = resultHeader[0].ss_color;
+
+                string meta_color_1 = "";
+                string meta_color_2 = "";
+                string meta_color_3 = "";
+                string meta_color_4 = "";
+
+                try
+                {
+
+                    if (aux_meta_color != "" && aux_meta_color != null)
+                    {
+                        meta_color_1 = colores[aux_meta_color].color1;
+                        meta_color_2 = colores[aux_meta_color].color2;
+                        meta_color_3 = colores[aux_meta_color].color3;
+                        meta_color_4 = colores[aux_meta_color].color4;
+                    }
+                    else
+                    {
+                        meta_color_1 = colores["green"].color1;
+                        meta_color_2 = colores["green"].color2;
+                        meta_color_3 = colores["green"].color3;
+                        meta_color_4 = colores["green"].color4;
+                    }
+                }
+                catch (Exception e)
                 
-                    meta_titulo = resultHeader[0].ss_nombre_tienda;
-                    meta_description = resultHeader[0].ss_descripcion_tienda;
-                    meta_imagen = resultHeader[0].ss_url_logo_head;
-                
+                    {
+                        meta_color_1 = colores["green"].color1;
+                        meta_color_2 = colores["green"].color2;
+                        meta_color_3 = colores["green"].color3;
+                        meta_color_4 = colores["green"].color4;
+                    }
+               
+                htmlFather = htmlFather.Replace("[[COLOR1]]", meta_color_1);
+                htmlFather = htmlFather.Replace("[[COLOR2]]", meta_color_2);
+                htmlFather = htmlFather.Replace("[[COLOR3]]", meta_color_3);
+                htmlFather = htmlFather.Replace("[[COLOR4]]", meta_color_4);
+
                 if (paginacontenido)
                 {
                     htmlFather = htmlFather.Replace("[[OG_TITULO]]", process);
