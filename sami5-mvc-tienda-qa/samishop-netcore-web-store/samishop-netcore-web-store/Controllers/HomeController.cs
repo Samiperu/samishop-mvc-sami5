@@ -547,18 +547,24 @@ namespace SamishopV2_Template_1.Controllers
 
                                         string datos_variaciones_atributo1_titulo_temp = result_obj_datos_variaciones.atributo1_titulo;
                                         string datos_variaciones_atributo1_valor_temp = result_obj_datos_variaciones.atributo1_valor;
+                                        if(datos_variaciones_atributo1_titulo_temp != "" && datos_variaciones_atributo1_valor_temp != "") {
+                                            VariationsTitleOne.Add(datos_variaciones_atributo1_titulo_temp);
+                                            VariationsOne.Add(datos_variaciones_atributo1_valor_temp);
+                                        }
+
                                         string datos_variaciones_atributo2_titulo_temp = result_obj_datos_variaciones.atributo2_titulo;
                                         string datos_variaciones_atributo2_valor_temp = result_obj_datos_variaciones.atributo2_valor;
-                                        string datos_variaciones_atributo3_titulo_temp = result_obj_datos_variaciones.atributo3_titulo;
+                                        if(datos_variaciones_atributo2_titulo_temp != "" && datos_variaciones_atributo2_valor_temp != ""){
+                                            VariationsTitleOne.Add(datos_variaciones_atributo2_titulo_temp);
+                                            VariationsTwo.Add(datos_variaciones_atributo2_valor_temp);
+                                        }
+
                                         string datos_variaciones_atributo3_valor_temp = result_obj_datos_variaciones.atributo3_valor;
-
-                                        VariationsTitleOne.Add(datos_variaciones_atributo1_titulo_temp);
-                                        VariationsTitleOne.Add(datos_variaciones_atributo2_titulo_temp);
-                                        VariationsTitleOne.Add(datos_variaciones_atributo3_titulo_temp);
-
-                                        VariationsOne.Add(datos_variaciones_atributo1_valor_temp);
-                                        VariationsTwo.Add(datos_variaciones_atributo2_valor_temp);
-                                        VariationsThree.Add(datos_variaciones_atributo3_valor_temp);
+                                        string datos_variaciones_atributo3_titulo_temp = result_obj_datos_variaciones.atributo3_titulo;
+                                        if(datos_variaciones_atributo3_valor_temp != "" && datos_variaciones_atributo3_titulo_temp != "") {
+                                            VariationsTitleOne.Add(datos_variaciones_atributo3_titulo_temp);
+                                            VariationsThree.Add(datos_variaciones_atributo3_valor_temp);
+                                        }
                                     }
 
                                     string ProductVariationSectionHtml = DocumentProduct.QuerySelector("[id='product-variation-section']").InnerHtml.Trim();
