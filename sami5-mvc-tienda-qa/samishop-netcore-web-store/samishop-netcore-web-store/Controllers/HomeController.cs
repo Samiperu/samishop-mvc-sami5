@@ -26,9 +26,16 @@ namespace SamishopV2_Template_1.Controllers
         [Route("/{urlName?}/{urlName2?}")]
         public async Task<ActionResult> Index(string urlName, string urlName2)
         {
+            string hexPaletaColores = "{" +
+                "green: {color1: '#E3E8C9',color2: '#CED69A',color3: '#A9B546',color4: '#777C56'}," +
+                "blue: {color1: '#C9D4E8',color2: '#CED69A',color3: '#4672B5',color4: '#56617C'}," +
+                "purple: {color1: '#D7C9E8',color2: '#B49AD6',color3: '#7746B5',color4: '#62567C'}," +
+                "red: {color1: '#E8C9C9',color2: '#D69A9A',color3: '#B54646',color4: '#7C5656'}," +
+                "orange: {color1: '#FFD9BE',color2: '#E5AC78',color3: '#D47540',color4: '#7C6156'}," +
+                "dark: {color1: '#EBEBEB',color2: '#C8C8C8',color3: '#959595',color4: '#585858'}" +
+            "}";
             var htmlFather = "";
             string htmlChildren = null;
-
             var UrlGoogleStorage = configurationSetting["UrlCdnStorage"];
             var UrlApiAuth = configurationSetting["UrlApiAuth"];
             var UrlApiBlog = configurationSetting["UrlApiBlog"];
@@ -40,15 +47,7 @@ namespace SamishopV2_Template_1.Controllers
             string VariableIsActive = configurationSetting["VariableIsActive"];
             string SaleformJavascript = configurationSetting["SaleformJavascript"];
             string tokenAccessSystem = configurationSetting["TokenAccessSystem"];
-
-            string hexPaletaColores = "{" +
-                "green: {color1: '#E3E8C9',color2: '#CED69A',color3: '#A9B546',color4: '#777C56'}," +
-                "blue: {color1: '#C9D4E8',color2: '#CED69A',color3: '#4672B5',color4: '#56617C'}," +
-                "purple: {color1: '#D7C9E8',color2: '#B49AD6',color3: '#7746B5',color4: '#62567C'}," +
-                "red: {color1: '#E8C9C9',color2: '#D69A9A',color3: '#B54646',color4: '#7C5656'}," +
-                "orange: {color1: '#FFD9BE',color2: '#E5AC78',color3: '#D47540',color4: '#7C6156'}," +
-                "dark: {color1: '#EBEBEB',color2: '#C8C8C8',color3: '#959595',color4: '#585858'}" +
-            "}";
+            string UrlPlantilla = configurationSetting["UrlPlantilla"];
 
             bool BoolVariableRequieredLogin = false;
             bool BoolVariableIsActive = true;
@@ -57,6 +56,7 @@ namespace SamishopV2_Template_1.Controllers
             string hostFolderClient = "";
             string urlNameFinal = null;
             var UrlCdnClient = "";
+            var UrlCdnClientPlantilla = "";
             var UrlCdnClientPrincipal = configurationSetting["UrlCdnStoragePrincipal"];
             string urlName3 = "";
 
@@ -77,6 +77,11 @@ namespace SamishopV2_Template_1.Controllers
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
+
+                // INICIO CONSUME TEMPLATE.HTML DE PLANTILLA TIENDA
+                UrlCdnClientPlantilla = UrlPlantilla;
+                // FIN CONSUME TEMPLATE.HTML DE PLANTILLA TIENDA
+
                 var config = Configuration.Default.WithDefaultLoader();
                 var context = BrowsingContext.New(config);
                 
@@ -511,13 +516,13 @@ namespace SamishopV2_Template_1.Controllers
 
                                     var variations = new Dictionary<string, string>();
 
-                                    List<string> VariationsTitleOne = new List<string>();
-                                    List<string> VariationsTitleTwo = new List<string>();
-                                    List<string> VariationsTitleThree = new List<string>();
+                                    HashSet<string> VariationsTitleOne = new HashSet<string>();
+                                    HashSet<string> VariationsTitleTwo = new HashSet<string>();
+                                    HashSet<string> VariationsTitleThree = new HashSet<string>();
 
-                                    List<string> VariationsOne = new List<string>();
-                                    List<string> VariationsTwo = new List<string>();
-                                    List<string> VariationsThree = new List<string>();
+                                    HashSet<string> VariationsOne = new HashSet<string>();
+                                    HashSet<string> VariationsTwo = new HashSet<string>();
+                                    HashSet<string> VariationsThree = new HashSet<string>();
 
                                     for (int i = 0; i < result.obj.datos_variaciones.Count; i++)
                                     {
@@ -558,11 +563,6 @@ namespace SamishopV2_Template_1.Controllers
                                         VariationsThree.Add(datos_variaciones_atributo3_valor_temp);
                                     }
 
-                                    var uniqueVariationsTitleOne = new HashSet<string>(VariationsTitleOne);
-                                    var uniqueVariationsOne = new HashSet<string>(VariationsOne);
-                                    var uniqueVariationsTwo = new HashSet<string>(VariationsTwo);
-                                    var uniqueVariationsThree = new HashSet<string>(VariationsThree);
-
                                     string ProductVariationSectionHtml = DocumentProduct.QuerySelector("[id='product-variation-section']").InnerHtml.Trim();
                                     htmlChildren = htmlChildren.Replace(ProductVariationSectionHtml, "[[PRODUCT_VARIATION_SECTION_HTML]]");
 
@@ -571,7 +571,7 @@ namespace SamishopV2_Template_1.Controllers
 
                                     int CountTitle = 0;
                                     string AllProductVariationSectionHtml = "";
-                                    foreach (var valueTitle in uniqueVariationsTitleOne)
+                                    foreach (var valueTitle in VariationsTitleOne)
                                     {
                                         CountTitle++;
                                         string NewProductVariationSectionHtml = ProductVariationSectionHtml;
@@ -579,17 +579,17 @@ namespace SamishopV2_Template_1.Controllers
 
                                         if (CountTitle == 1 && valueTitle != "")
                                         {
-                                            foreach (var value in uniqueVariationsOne)
+                                            foreach (var value in VariationsOne)
                                             {
                                                 if (value != "")
                                                 {
                                                     string NewProductVariationItemHtml = ProductVariationItemHtml;
                                                     NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-                                                    
+
                                                     AllProductVariationItemHtml = AllProductVariationItemHtml + NewProductVariationItemHtml;
                                                 }
                                             }
-                                            
+
                                             NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml);
                                             NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle);
 
@@ -599,7 +599,7 @@ namespace SamishopV2_Template_1.Controllers
                                         }
                                         else if (CountTitle == 2 && valueTitle != "")
                                         {
-                                            foreach (var value in uniqueVariationsTwo)
+                                            foreach (var value in VariationsTwo)
                                             {
                                                 if (value != "")
                                                 {
@@ -619,7 +619,7 @@ namespace SamishopV2_Template_1.Controllers
                                         }
                                         else if (CountTitle == 3 && valueTitle != "")
                                         {
-                                            foreach (var value in uniqueVariationsThree)
+                                            foreach (var value in VariationsThree)
                                             {
                                                 if (value != "")
                                                 {
@@ -638,6 +638,7 @@ namespace SamishopV2_Template_1.Controllers
                                             AllProductVariationSectionHtml = AllProductVariationSectionHtml + NewProductVariationSectionHtml;
                                         }
                                     }
+
 
                                     htmlChildren = htmlChildren.Replace("[[PRODUCT_VARIATION_SECTION_HTML]]", AllProductVariationSectionHtml);
                                     htmlChildren = htmlChildren.Replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title);
