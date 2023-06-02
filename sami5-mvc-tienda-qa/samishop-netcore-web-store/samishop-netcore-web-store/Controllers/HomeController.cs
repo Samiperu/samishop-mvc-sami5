@@ -517,8 +517,6 @@ namespace SamishopV2_Template_1.Controllers
                                     var variations = new Dictionary<string, string>();
 
                                     HashSet<string> VariationsTitleOne = new HashSet<string>();
-                                    HashSet<string> VariationsTitleTwo = new HashSet<string>();
-                                    HashSet<string> VariationsTitleThree = new HashSet<string>();
 
                                     HashSet<string> VariationsOne = new HashSet<string>();
                                     HashSet<string> VariationsTwo = new HashSet<string>();
@@ -590,12 +588,11 @@ namespace SamishopV2_Template_1.Controllers
                                                 }
                                             }
 
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml);
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle);
-
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-
-                                            AllProductVariationSectionHtml = AllProductVariationSectionHtml + NewProductVariationSectionHtml;
+                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml
+                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
+                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
+                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
+                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
                                         }
                                         else if (CountTitle == 2 && valueTitle != "")
                                         {
@@ -606,16 +603,15 @@ namespace SamishopV2_Template_1.Controllers
                                                     string NewProductVariationItemHtml = ProductVariationItemHtml;
                                                     NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
 
-                                                    AllProductVariationItemHtml = AllProductVariationItemHtml + NewProductVariationItemHtml;
+                                                    AllProductVariationItemHtml += NewProductVariationItemHtml;
                                                 }
                                             }
 
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml);
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle);
-
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-
-                                            AllProductVariationSectionHtml = AllProductVariationSectionHtml + NewProductVariationSectionHtml;
+                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml
+                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
+                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
+                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
+                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
                                         }
                                         else if (CountTitle == 3 && valueTitle != "")
                                         {
@@ -630,34 +626,36 @@ namespace SamishopV2_Template_1.Controllers
                                                 }
                                             }
 
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml);
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle);
-
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml.Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-
-                                            AllProductVariationSectionHtml = AllProductVariationSectionHtml + NewProductVariationSectionHtml;
+                                            NewProductVariationSectionHtml += NewProductVariationSectionHtml
+                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
+                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
+                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
+                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
                                         }
                                     }
 
 
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_VARIATION_SECTION_HTML]]", AllProductVariationSectionHtml);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_PRICE]]", datos_variaciones_sale_price.ToString());
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_SALE_PRICE]]", datos_variaciones_price.ToString());
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DESCRIPTION]]", datos_Catalogo_descrip_corta);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_PRINCIPAL_SKU]]", datos_variaciones_url1_imagen_sku);
-                                    htmlFather = htmlFather.Replace("[[OG_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku);
-                                    htmlFather = htmlFather.Replace("[[OG_TITULO]]", datos_Catalogo_item_titulo);
-                                    htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", datos_Catalogo_descripcion);
-                                    htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", datos_Catalogo_palabras_clave);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TITLE_1]]", datos_Catalogo_descripcion1_titulo);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TITLE_2]]", datos_Catalogo_descripcion2_titulo);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TITLE_3]]", datos_Catalogo_descripcion3_titulo);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TEXT_1]]", datos_Catalogo_descripcion1_detalle);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TEXT_2]]", datos_Catalogo_descripcion2_detalle);
-                                    htmlChildren = htmlChildren.Replace("[[PRODUCT_DETAILS_TEXT_3]]", datos_Catalogo_descripcion3_detalle);
+                                    htmlChildren = htmlChildren
+                                        .Replace("[[PRODUCT_VARIATION_SECTION_HTML]]", AllProductVariationSectionHtml)
+                                        .Replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title)
+                                        .Replace("[[PRODUCT_PRICE]]", datos_variaciones_sale_price.ToString())
+                                        .Replace("[[PRODUCT_SALE_PRICE]]", datos_variaciones_price.ToString())
+                                        .Replace("[[PRODUCT_DESCRIPTION]]", datos_Catalogo_descrip_corta)
+                                        .Replace("[[PRODUCT_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
+                                        .Replace("[[PRODUCT_PRINCIPAL_SKU]]", datos_variaciones_url1_imagen_sku);
+                                    htmlFather = htmlFather
+                                        .Replace("[[OG_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
+                                        .Replace("[[OG_TITULO]]", datos_Catalogo_item_titulo)
+                                        .Replace("[[OG_DESCRIPCION]]", datos_Catalogo_descripcion)
+                                        .Replace("[[OG_PALABRAS_CLAVE]]", datos_Catalogo_palabras_clave);
+                                    htmlChildren = htmlChildren
+                                        .Replace("[[PRODUCT_SKU]]", datos_variaciones_sku)
+                                        .Replace("[[PRODUCT_DETAILS_TITLE_2]]", datos_Catalogo_descripcion2_titulo)
+                                        .Replace("[[PRODUCT_DETAILS_TITLE_1]]", datos_Catalogo_descripcion1_titulo)
+                                        .Replace("[[PRODUCT_DETAILS_TITLE_3]]", datos_Catalogo_descripcion3_titulo)
+                                        .Replace("[[PRODUCT_DETAILS_TEXT_1]]", datos_Catalogo_descripcion1_detalle)
+                                        .Replace("[[PRODUCT_DETAILS_TEXT_2]]", datos_Catalogo_descripcion2_detalle)
+                                        .Replace("[[PRODUCT_DETAILS_TEXT_3]]", datos_Catalogo_descripcion3_detalle);
 
                                     var originalParent = DocumentProduct.QuerySelector("[id='product-thumbs-wrap']");
                                     string replaceNew = originalParent.InnerHtml.Trim();
