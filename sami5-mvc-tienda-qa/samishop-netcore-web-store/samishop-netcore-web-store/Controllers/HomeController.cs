@@ -514,13 +514,14 @@ namespace SamishopV2_Template_1.Controllers
                                     string datos_variaciones_url5_imagen_sku = "";
                                     string datos_variaciones_url6_imagen_sku = "";
 
-                                    var variations = new Dictionary<string, string>();
-
-                                    HashSet<string> VariationsTitleOne = new HashSet<string>();
-
-                                    HashSet<string> VariationsOne = new HashSet<string>();
-                                    HashSet<string> VariationsTwo = new HashSet<string>();
-                                    HashSet<string> VariationsThree = new HashSet<string>();
+                                    List<string> VariationsTitleOne = new List<string>();
+                                    VariationsTitleOne.Add("");
+                                    VariationsTitleOne.Add("");
+                                    VariationsTitleOne.Add("");
+                                    List<HashSet<string>> variationsList = new List<HashSet<string>>();
+                                    variationsList.Add(new HashSet<string>());
+                                    variationsList.Add(new HashSet<string>());
+                                    variationsList.Add(new HashSet<string>());
 
                                     for (int i = 0; i < result.obj.datos_variaciones.Count; i++)
                                     {
@@ -548,22 +549,22 @@ namespace SamishopV2_Template_1.Controllers
                                         string datos_variaciones_atributo1_titulo_temp = result_obj_datos_variaciones.atributo1_titulo;
                                         string datos_variaciones_atributo1_valor_temp = result_obj_datos_variaciones.atributo1_valor;
                                         if(datos_variaciones_atributo1_titulo_temp != "" && datos_variaciones_atributo1_valor_temp != "") {
-                                            VariationsTitleOne.Add(datos_variaciones_atributo1_titulo_temp);
-                                            VariationsOne.Add(datos_variaciones_atributo1_valor_temp);
+                                            VariationsTitleOne[0] = datos_variaciones_atributo1_titulo_temp;
+                                            variationsList[0].Add(datos_variaciones_atributo1_valor_temp);
                                         }
 
                                         string datos_variaciones_atributo2_titulo_temp = result_obj_datos_variaciones.atributo2_titulo;
                                         string datos_variaciones_atributo2_valor_temp = result_obj_datos_variaciones.atributo2_valor;
                                         if(datos_variaciones_atributo2_titulo_temp != "" && datos_variaciones_atributo2_valor_temp != ""){
-                                            VariationsTitleOne.Add(datos_variaciones_atributo2_titulo_temp);
-                                            VariationsTwo.Add(datos_variaciones_atributo2_valor_temp);
+                                            VariationsTitleOne[1] = datos_variaciones_atributo2_titulo_temp;
+                                            variationsList[1].Add(datos_variaciones_atributo2_valor_temp);
                                         }
 
                                         string datos_variaciones_atributo3_valor_temp = result_obj_datos_variaciones.atributo3_valor;
                                         string datos_variaciones_atributo3_titulo_temp = result_obj_datos_variaciones.atributo3_titulo;
                                         if(datos_variaciones_atributo3_valor_temp != "" && datos_variaciones_atributo3_titulo_temp != "") {
-                                            VariationsTitleOne.Add(datos_variaciones_atributo3_titulo_temp);
-                                            VariationsThree.Add(datos_variaciones_atributo3_valor_temp);
+                                            VariationsTitleOne[2] = datos_variaciones_atributo3_titulo_temp;
+                                            variationsList[2].Add(datos_variaciones_atributo3_valor_temp);
                                         }
                                     }
 
@@ -573,71 +574,29 @@ namespace SamishopV2_Template_1.Controllers
                                     string ProductVariationItemHtml = DocumentProduct.QuerySelector("[id='product-variation-items']").InnerHtml;
                                     ProductVariationSectionHtml = ProductVariationSectionHtml.Replace(ProductVariationItemHtml, "[[PRODUCT_VARIATION_VALUE_HTML]]");
 
-                                    int CountTitle = 0;
+                                    int index = 0;
                                     string AllProductVariationSectionHtml = "";
                                     foreach (var valueTitle in VariationsTitleOne)
                                     {
-                                        CountTitle++;
                                         string NewProductVariationSectionHtml = ProductVariationSectionHtml;
                                         string AllProductVariationItemHtml = "";
 
-                                        if (CountTitle == 1 && valueTitle != "")
+                                        if (valueTitle != "")
                                         {
-                                            foreach (var value in VariationsOne)
+                                            foreach (var value in variationsList[index])
                                             {
-                                                if (value != "")
-                                                {
-                                                    string NewProductVariationItemHtml = ProductVariationItemHtml;
-                                                    NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-
-                                                    AllProductVariationItemHtml = AllProductVariationItemHtml + NewProductVariationItemHtml;
-                                                }
+                                                string NewProductVariationItemHtml = ProductVariationItemHtml;
+                                                NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
+                                                AllProductVariationItemHtml += NewProductVariationItemHtml;
                                             }
-
+                                            int CountTitle = index + 1;
                                             NewProductVariationSectionHtml = NewProductVariationSectionHtml
                                                 .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
                                                 .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
                                                 .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
                                             AllProductVariationSectionHtml += NewProductVariationSectionHtml;
                                         }
-                                        else if (CountTitle == 2 && valueTitle != "")
-                                        {
-                                            foreach (var value in VariationsTwo)
-                                            {
-                                                if (value != "")
-                                                {
-                                                    string NewProductVariationItemHtml = ProductVariationItemHtml;
-                                                    NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-
-                                                    AllProductVariationItemHtml += NewProductVariationItemHtml;
-                                                }
-                                            }
-
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml
-                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
-                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
-                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
-                                        }
-                                        else if (CountTitle == 3 && valueTitle != "")
-                                        {
-                                            foreach (var value in VariationsThree)
-                                            {
-                                                if (value != "")
-                                                {
-                                                    string NewProductVariationItemHtml = ProductVariationItemHtml;
-                                                    NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-
-                                                    AllProductVariationItemHtml = AllProductVariationItemHtml + NewProductVariationItemHtml;
-                                                }
-                                            }
-
-                                            NewProductVariationSectionHtml += NewProductVariationSectionHtml
-                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
-                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
-                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
-                                        }
+                                        index++;
                                     }
 
 
