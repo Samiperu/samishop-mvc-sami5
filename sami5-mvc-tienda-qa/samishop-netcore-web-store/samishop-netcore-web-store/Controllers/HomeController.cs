@@ -37,21 +37,11 @@ namespace SamishopV2_Template_1.Controllers
             var htmlFather = "";
             string htmlChildren = null;
             var UrlGoogleStorage = configurationSetting["UrlCdnStorage"];
-            var UrlApiAuth = configurationSetting["UrlApiAuth"];
-            var UrlApiBlog = configurationSetting["UrlApiBlog"];
             var UrlDefaultTemplate = configurationSetting["UrlDefaultTemplate"];
             var UrlApiCatalog = configurationSetting["UrlApiCatalog"];
-            var UrlAdmin = configurationSetting["UrlAdmin"];
-            var UrlNoValidate = configurationSetting["UrlNoValidate"];
-            string VariableRequieredLogin = configurationSetting["VariableRequieredLogin"];
             string VariableIsActive = configurationSetting["VariableIsActive"];
             string SaleformJavascript = configurationSetting["SaleformJavascript"];
-            string tokenAccessSystem = configurationSetting["TokenAccessSystem"];
             string UrlPlantilla = configurationSetting["UrlPlantilla"];
-
-            bool BoolVariableRequieredLogin = false;
-            bool BoolVariableIsActive = true;
-            bool BoolEsAdmin = false;
 
             string hostFolderClient = "";
             string urlNameFinal = null;
@@ -60,7 +50,6 @@ namespace SamishopV2_Template_1.Controllers
             var UrlCdnClientPrincipal = configurationSetting["UrlCdnStoragePrincipal"];
             string urlName3 = "";
 
-            var ValidateUrlUser = 0;
             var valueRandom = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
             string myuri = Request.Headers.Host;
             string[] separatedUrl = myuri.Split('/');
@@ -70,10 +59,9 @@ namespace SamishopV2_Template_1.Controllers
                 hostFolderClientHost = hostFolderClientHost.ToLower();
                 hostFolderClientHost = hostFolderClientHost.Replace("/", "");
                 hostFolderClientHost = hostFolderClientHost.Replace("www.", "");
-                string cookieDomainLogin = Request.Cookies["domain_login"];
 
                 urlName3 = hostFolderClientHost;
-                urlName3 = "samiprueba.s1a2m3i4.com";
+                //urlName3 = "comprandoconmb.s1a2m3i4.com";
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -101,16 +89,6 @@ namespace SamishopV2_Template_1.Controllers
 
                 if (documentFooter.StatusCode != HttpStatusCode.OK) throw new Exception();
                 htmlFather = htmlFather.Replace("[[HTML_FOOTER_V1]]", documentFooter.Source.Text);
-                BoolVariableIsActive = true;
-                if (htmlDocumentHeader.Contains(VariableRequieredLogin))
-                {
-                    BoolVariableRequieredLogin = true;
-                }
-                if (urlName3.Equals(UrlAdmin))
-                {
-                    BoolVariableRequieredLogin = true;
-                    BoolEsAdmin = true;
-                }
 
                 if (urlName == null)
                 {
@@ -139,147 +117,53 @@ namespace SamishopV2_Template_1.Controllers
                         }
                     }
                     urlNameFinal = urlName;
-                    if (urlName == "account")
-                    {
-                        if (urlName2 == null)
-                        {
-                            urlName2 = "home";
-                        }
-
-                        urlNameFinal = urlName2;
-                    }
                 }
-                if (BoolVariableIsActive)
-                {
-                    if (BoolVariableRequieredLogin)
-                    {
-                        string UrlFinal = "home";
-                        if (urlName != null)
-                        {
-                            UrlFinal = urlName;
-                        }
-                        if (urlName2 != null)
-                        {
-                            UrlFinal = urlName + "/" + urlName2;
-                        }
-                        if (UrlFinal != "login" && UrlFinal != "recoverypwd" && UrlFinal != "register" && UrlFinal != "registro" && UrlFinal != "process/login")
-                        {
-                            string cookieTokenRefresh = Request.Cookies["account_login"];
-                            if (cookieTokenRefresh != null)
-                            {
-                                cookieTokenRefresh = cookieTokenRefresh.Replace(@"\", "").Replace(@"""", "");
-                            }
-                            string domainDefault = Request.Cookies["account_login_domain_default"];
-                            if (domainDefault != null)
-                            {
-                                domainDefault = domainDefault.Replace(@"\", "").Replace(@"""", "");
-                            }
 
-                            if (domainDefault != null && domainDefault != UrlAdmin)
-                            {
-                                ValidateUrlUser = await ValidatePath(urlNameFinal, domainDefault, UrlApiAuth, cookieTokenRefresh);
-                            }
-                            else
-                            {
-                                ValidateUrlUser = 11;
-                            }
-                        }
-                        else
-                        {
-                            ValidateUrlUser = 10;
-                        }
+                if (urlName != null && urlName2 != null)
+                {
+                    urlName2 = urlName2.ToLower();
+                    urlNameFinal = urlName + "_" + urlName2.ToLower();
+                }
+
+                string codeProduct = "";
+                if (urlName != null) {
+                    var urlNameAplit = urlName.Split(",");
+                    if (urlNameAplit.Count() > 1){
+                        codeProduct = urlNameAplit[1].Trim();
                     }
                     else
                     {
-                        if (urlName == "account")
-                        {
-                            string cookieTokenRefresh = Request.Cookies["account_login"];
-                            if (cookieTokenRefresh != null)
-                            {
-                                cookieTokenRefresh = cookieTokenRefresh.Replace(@"\", "").Replace(@"""", "");
-                            }
-                            string domainDefault = Request.Cookies["account_login_domain_default"];
-                            if (domainDefault != null)
-                            {
-                                domainDefault = domainDefault.Replace(@"\", "").Replace(@"""", "");
-                            }
-
-                            if (domainDefault != null && domainDefault != UrlAdmin)
-                            {
-                                ValidateUrlUser = await ValidatePath(urlNameFinal, domainDefault, UrlApiAuth, cookieTokenRefresh);
-                            }
-                            else
-                            {
-                                ValidateUrlUser = 11;
-                            }
-                        }
-                        else
-                        {
-                            ValidateUrlUser = 10;
-                        }
+                        urlName = urlName.ToLower(); 
                     }
+                }
 
-                    if (ValidateUrlUser == 11 || ValidateUrlUser == 21)
+                if (codeProduct == "")
+                {
+                    var TypePage = "paginas_contenido";
+                    if (urlName == null)
                     {
-                        string UrlRedirect = "";
-                        if (!BoolEsAdmin)
-                        {
-                            UrlRedirect = "/process/login";
-                        }
-                        else
-                        {
-                            UrlRedirect = "/login";
-                        }
-
-                        if (urlName != null)
-                        {
-                            UrlRedirect = UrlRedirect + "/?redirect=" + urlName;
-                        }
-                        if (urlName2 != null)
-                        {
-                            UrlRedirect = UrlRedirect + "/" + urlName2;
-                        }
-                        return Redirect(UrlRedirect);
+                        urlName = "home";
                     }
-
+                    else
+                    {
+                        urlName = urlName.ToLower();
+                    }
                     if (urlName != null && urlName2 != null)
                     {
-                        urlName2 = urlName2.ToLower();
-                        urlNameFinal = urlName + "_" + urlName2.ToLower();
+                        if (!urlName.Equals("blog"))
+                        {
+                            TypePage = "paginas_aplicacion";
+                        }
                     }
 
-                    if (urlName3.Equals(UrlAdmin))
+                    if (urlName == "f")
                     {
-                        
-                        var documentChildren = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_contenido" + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
 
-                        if (documentChildren.StatusCode == HttpStatusCode.OK)
+                        TypePage = "paginas_aplicacion";
+                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/" + TypePage + "/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
+                        if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
                         {
-                            string urlNameValidate = "";
-                            if (ValidateUrlUser == 20 || ValidateUrlUser == 5)
-                            {
-                                urlNameFinal = "error-factura";
-                                urlNameValidate = urlNameFinal;
-                            }
-                            else if (ValidateUrlUser == 12 || ValidateUrlUser == 22)
-                            {
-                                urlNameFinal = "error-access";
-                                urlNameValidate = urlNameFinal;
-                            }
-                            else if (ValidateUrlUser == 13 || ValidateUrlUser == 23)
-                            {
-                                urlNameFinal = "error-plan";
-                                urlNameValidate = urlNameFinal;
-                            }
-
-                            if (urlNameValidate != "")
-                            {
-                                
-                                var documentChildren2 = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/paginas_contenido" + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
-                                documentChildren = documentChildren2;
-                            }
-
-                            htmlChildren = documentChildren.Source.Text;
+                            htmlChildren = DocumentCatalogo.Source.Text;
                         }
                         else
                         {
@@ -288,440 +172,267 @@ namespace SamishopV2_Template_1.Controllers
                     }
                     else
                     {
-                        if (ValidateUrlUser != 5)
-                        {
-                            string codeProduct = "";
-                            if (urlName != null)
-                            {
+                        
+                        var documentChildren = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
 
-                                var urlNameAplit = urlName.Split(",");
-                                if (urlNameAplit.Count() > 1)
-                                {
-                                    codeProduct = urlNameAplit[1].Trim();
-                                }
-                                else
-                                {
-                                    urlName = urlName.ToLower(); 
-                                }
+                        if (documentChildren.StatusCode != HttpStatusCode.OK)
+                        {    
+                            var DocumentCatalogo = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
+                            if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
+                            {
+                                htmlChildren = DocumentCatalogo.Source.Text;
                             }
-
-                            if (codeProduct == "")
+                            else
                             {
-                                var TypePage = "paginas_contenido";
-                                if (urlName == null)
-                                {
-                                    urlName = "home";
-                                }
-                                else
-                                {
-                                    urlName = urlName.ToLower();
-                                }
-                                if (urlName != null && urlName2 != null)
-                                {
-                                    if (!urlName.Equals("blog"))
-                                    {
-                                        TypePage = "paginas_aplicacion";
-                                    }
-                                }
-
-                                if (urlName == "f")
-                                {
-
-                                    TypePage = "paginas_aplicacion";
-                                    var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/" + TypePage + "/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
-                                    if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
-                                    {
-                                        htmlChildren = DocumentCatalogo.Source.Text;
-                                    }
-                                    else
-                                    {
-                                        htmlChildren = null;
-                                    }
-                                }
-                                else if (urlName.Equals("blog") && urlName2 != null)
-                                {
-                                    var ResultadoHtmlBlog = await ObtenerHtmlBlog(urlName2, urlName3, UrlApiBlog, tokenAccessSystem);
-
-                                    if (ResultadoHtmlBlog != null)
-                                    {
-                                        var titulo = Convert.ToString(ResultadoHtmlBlog.titulo);
-                                        var url_imagen = Convert.ToString(ResultadoHtmlBlog.url_imagen);
-                                        var descripcion_corta = Convert.ToString(ResultadoHtmlBlog.seo.descripcion);
-                                        var palabras_clave = Convert.ToString(ResultadoHtmlBlog.seo.palabras_claves);
-                                        var descripcion_larga = Convert.ToString(ResultadoHtmlBlog.descripcion_larga);
-                                        htmlFather = htmlFather.Replace("[[OG_PRINCIPAL_IMAGE]]", url_imagen);
-                                        htmlFather = htmlFather.Replace("[[OG_TITULO]]", titulo);
-                                        htmlFather = htmlFather.Replace("[[OG_URL]]", "https://" + urlName3 + "/" + urlName + "/" + urlName2);
-                                        htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", descripcion_corta);
-                                        htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", palabras_clave);
-                                        TypePage = "paginas_aplicacion";                                        
-                                        var DocumentBlog = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + "blog_article" + ".html" + "?v=" + valueRandom);
-                                        if (DocumentBlog.StatusCode == HttpStatusCode.OK)
-                                        {
-                                            htmlChildren = DocumentBlog.Source.Text;
-                                            htmlChildren = htmlChildren.Replace("[[ARTICLE_TITLE]]", titulo);
-                                            htmlChildren = htmlChildren.Replace("[[ARTICLE_PRINCIPAL_IMAGE]]", url_imagen);
-                                            htmlChildren = htmlChildren.Replace("[[ARTICLE_CONTENT]]", descripcion_larga);
-                                        }
-                                        else
-                                        {
-                                            htmlChildren = null;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        htmlChildren = null;
-                                    }
-                                }
-                                else
-                                {
-                                    
-                                    var documentChildren = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
-
-                                    if (documentChildren.StatusCode != HttpStatusCode.OK)
-                                    {
-                                        if (urlName != "account")
-                                        {
-                                            var ResultadoHtmlBlog = await ObtenerHtmlBlog(urlName, urlName3, UrlApiBlog, tokenAccessSystem);
-
-                                            if (ResultadoHtmlBlog != null)
-                                            {
-                                                var titulo = Convert.ToString(ResultadoHtmlBlog.titulo);
-                                                var url_imagen = Convert.ToString(ResultadoHtmlBlog.url_imagen);
-                                                var descripcion_larga = Convert.ToString(ResultadoHtmlBlog.descripcion_larga);
-
-                                                TypePage = "paginas_aplicacion";
-                                                
-                                                var DocumentBlog = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/" + TypePage + "/" + "blog_article" + ".html" + "?v=" + valueRandom);
-                                                if (DocumentBlog.StatusCode == HttpStatusCode.OK)
-                                                {
-                                                    htmlChildren = DocumentBlog.Source.Text;
-                                                    htmlChildren = htmlChildren.Replace("[[ARTICLE_TITLE]]", titulo);
-                                                    htmlChildren = htmlChildren.Replace("[[ARTICLE_PRINCIPAL_IMAGE]]", url_imagen);
-                                                    htmlChildren = htmlChildren.Replace("[[ARTICLE_CONTENT]]", descripcion_larga);
-                                                    htmlChildren = htmlChildren.Replace("[[OG_PRINCIPAL_IMAGE]]", url_imagen);
-                                                    htmlChildren = htmlChildren.Replace("[[OG_TITULO]]", titulo);
-                                                    htmlChildren = htmlChildren.Replace("[[OG_DESCRIPCION]]", descripcion_larga);
-
-                                                }
-                                                else
-                                                {
-                                                    htmlChildren = null;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                TypePage = "paginas_aplicacion";
-                                                
-                                                var DocumentCatalogo = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
-                                                if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
-                                                {
-                                                    htmlChildren = DocumentCatalogo.Source.Text;
-                                                }
-                                                else
-                                                {
-                                                    htmlChildren = null;
-                                                }
-                                            }
-
-                                        }
-                                        else
-                                        {
-                                            
-                                            var DocumentCatalogo = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
-                                            if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
-                                            {
-                                                htmlChildren = DocumentCatalogo.Source.Text;
-                                            }
-                                            else
-                                            {
-                                                htmlChildren = null;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        htmlChildren = documentChildren.Source.Text;
-                                    }
-                                }
-                            }
-                            else if (codeProduct != "")
-                            {
-
-                                var DocumentProduct = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "producto_detalle" + ".html" + "?v=" + valueRandom);
-                                htmlChildren = DocumentProduct.Source.Text;
-                                bool resultado_servidor = false;
-                                bool integracion_javascript = false;
-                                dynamic result = null;
-                                if (!htmlChildren.Contains(SaleformJavascript))
-                                {
-                                    HttpClient Client = new HttpClient();
-                                    var Result = await Client.GetAsync(UrlApiCatalog + "/datoscatalogo/" + "saleform/" + hostFolderClient + "/idproducto/" + codeProduct);
-                                    var Content = Result.Content.ReadAsStringAsync().Result;
-                                    if (Result.StatusCode == HttpStatusCode.OK)
-                                    {
-                                        htmlChildren = DocumentProduct.Source.Text;
-                                        result = JsonConvert.DeserializeObject(Content);
-                                        resultado_servidor = true;
-                                    }
-                                    else
-                                    {
-                                        urlName = "home";
-                                    }
-                                }
-                                else
-                                {
-                                    integracion_javascript = true;
-                                }
-                                if (!integracion_javascript && resultado_servidor)
-                                {
-                                    var result_obj_datos_Catalogo = result.obj.datos_Catalogo[0];
-                                    string datos_Catalogo_sku_padre = result_obj_datos_Catalogo.sku_padre;
-                                    string datos_Catalogo_item_title = result_obj_datos_Catalogo.item_title;
-
-                                    string datos_Catalogo_item_titulo = result_obj_datos_Catalogo.seo_titulo;
-
-
-                                    string datos_Catalogo_palabras_clave = result_obj_datos_Catalogo.seo_palabras_clave;
-                                    string datos_Catalogo_descripcion = result_obj_datos_Catalogo.seo_descripcion;
-                                    string datos_Catalogo_tags_promociones = result_obj_datos_Catalogo.tags_promociones;
-                                    string datos_Catalogo_url_producto = result_obj_datos_Catalogo.url_producto;
-                                    string datos_Catalogo_descrip_corta = result_obj_datos_Catalogo.descrip_corta;
-
-                                    string datos_Catalogo_descripcion1_titulo = result_obj_datos_Catalogo.descripcion1_titulo;
-                                    string datos_Catalogo_descripcion2_titulo = result_obj_datos_Catalogo.descripcion2_titulo;
-                                    string datos_Catalogo_descripcion3_titulo = result_obj_datos_Catalogo.descripcion3_titulo;
-
-                                    string datos_Catalogo_descripcion1_detalle = result_obj_datos_Catalogo.descripcion1_detalle;
-                                    string datos_Catalogo_descripcion2_detalle = result_obj_datos_Catalogo.descripcion2_detalle;
-                                    string datos_Catalogo_descripcion3_detalle = result_obj_datos_Catalogo.descripcion3_detalle;
-
-                                    string datos_variaciones_sku = "";
-                                    decimal datos_variaciones_price = 0;
-                                    decimal datos_variaciones_sale_price = 0;
-                                    decimal datos_variaciones_cantidad = 0;
-                                    string datos_variaciones_atributo1_titulo = "";
-                                    string datos_variaciones_atributo1_valor = "";
-                                    string datos_variaciones_atributo2_titulo = "";
-                                    string datos_variaciones_atributo2_valor = "";
-                                    string datos_variaciones_atributo3_titulo = "";
-                                    string datos_variaciones_atributo3_valor = "";
-
-                                    string datos_variaciones_url1_imagen_sku = "";
-                                    string datos_variaciones_url2_imagen_sku = "";
-                                    string datos_variaciones_url3_imagen_sku = "";
-                                    string datos_variaciones_url4_imagen_sku = "";
-                                    string datos_variaciones_url5_imagen_sku = "";
-                                    string datos_variaciones_url6_imagen_sku = "";
-
-                                    List<string> VariationsTitleOne = new List<string>();
-                                    VariationsTitleOne.Add("");
-                                    VariationsTitleOne.Add("");
-                                    VariationsTitleOne.Add("");
-                                    List<HashSet<string>> variationsList = new List<HashSet<string>>();
-                                    variationsList.Add(new HashSet<string>());
-                                    variationsList.Add(new HashSet<string>());
-                                    variationsList.Add(new HashSet<string>());
-
-                                    for (int i = 0; i < result.obj.datos_variaciones.Count; i++)
-                                    {
-                                        var result_obj_datos_variaciones = result.obj.datos_variaciones[i];
-                                        if (i == 0)
-                                        {
-                                            datos_variaciones_sku = result_obj_datos_variaciones.sku;
-                                            datos_variaciones_price = result_obj_datos_variaciones.price;
-                                            datos_variaciones_sale_price = result_obj_datos_variaciones.sale_price;
-                                            datos_variaciones_cantidad = result_obj_datos_variaciones.cantidad;
-                                            datos_variaciones_atributo1_titulo = result_obj_datos_variaciones.atributo1_titulo;
-                                            datos_variaciones_atributo1_valor = result_obj_datos_variaciones.atributo1_valor;
-                                            datos_variaciones_atributo2_titulo = result_obj_datos_variaciones.atributo2_titulo;
-                                            datos_variaciones_atributo2_valor = result_obj_datos_variaciones.atributo2_valor;
-                                            datos_variaciones_atributo3_titulo = result_obj_datos_variaciones.atributo3_titulo;
-                                            datos_variaciones_atributo3_valor = result_obj_datos_variaciones.atributo3_valor;
-                                            datos_variaciones_url1_imagen_sku = result_obj_datos_variaciones.url1_imagen_sku;
-                                            datos_variaciones_url2_imagen_sku = result_obj_datos_variaciones.url2_imagen_sku;
-                                            datos_variaciones_url3_imagen_sku = result_obj_datos_variaciones.url3_imagen_sku;
-                                            datos_variaciones_url4_imagen_sku = result_obj_datos_variaciones.url4_imagen_sku;
-                                            datos_variaciones_url5_imagen_sku = result_obj_datos_variaciones.url5_imagen_sku;
-                                            datos_variaciones_url6_imagen_sku = result_obj_datos_variaciones.url6_imagen_sku;
-                                        }
-
-                                        string datos_variaciones_atributo1_titulo_temp = result_obj_datos_variaciones.atributo1_titulo;
-                                        string datos_variaciones_atributo1_valor_temp = result_obj_datos_variaciones.atributo1_valor;
-                                        if(datos_variaciones_atributo1_titulo_temp != "" && datos_variaciones_atributo1_valor_temp != "") {
-                                            VariationsTitleOne[0] = datos_variaciones_atributo1_titulo_temp;
-                                            variationsList[0].Add(datos_variaciones_atributo1_valor_temp);
-                                        }
-
-                                        string datos_variaciones_atributo2_titulo_temp = result_obj_datos_variaciones.atributo2_titulo;
-                                        string datos_variaciones_atributo2_valor_temp = result_obj_datos_variaciones.atributo2_valor;
-                                        if(datos_variaciones_atributo2_titulo_temp != "" && datos_variaciones_atributo2_valor_temp != ""){
-                                            VariationsTitleOne[1] = datos_variaciones_atributo2_titulo_temp;
-                                            variationsList[1].Add(datos_variaciones_atributo2_valor_temp);
-                                        }
-
-                                        string datos_variaciones_atributo3_valor_temp = result_obj_datos_variaciones.atributo3_valor;
-                                        string datos_variaciones_atributo3_titulo_temp = result_obj_datos_variaciones.atributo3_titulo;
-                                        if(datos_variaciones_atributo3_valor_temp != "" && datos_variaciones_atributo3_titulo_temp != "") {
-                                            VariationsTitleOne[2] = datos_variaciones_atributo3_titulo_temp;
-                                            variationsList[2].Add(datos_variaciones_atributo3_valor_temp);
-                                        }
-                                    }
-
-                                    string ProductVariationSectionHtml = DocumentProduct.QuerySelector("[id='product-variation-section']").InnerHtml.Trim();
-                                    htmlChildren = htmlChildren.Replace(ProductVariationSectionHtml, "[[PRODUCT_VARIATION_SECTION_HTML]]");
-
-                                    string ProductVariationItemHtml = DocumentProduct.QuerySelector("[id='product-variation-items']").InnerHtml;
-                                    ProductVariationSectionHtml = ProductVariationSectionHtml.Replace(ProductVariationItemHtml, "[[PRODUCT_VARIATION_VALUE_HTML]]");
-
-                                    int index = 0;
-                                    string AllProductVariationSectionHtml = "";
-                                    foreach (var valueTitle in VariationsTitleOne)
-                                    {
-                                        string NewProductVariationSectionHtml = ProductVariationSectionHtml;
-                                        string AllProductVariationItemHtml = "";
-
-                                        if (valueTitle != "")
-                                        {
-                                            foreach (var value in variationsList[index])
-                                            {
-                                                string NewProductVariationItemHtml = ProductVariationItemHtml;
-                                                NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
-                                                AllProductVariationItemHtml += NewProductVariationItemHtml;
-                                            }
-                                            int CountTitle = index + 1;
-                                            NewProductVariationSectionHtml = NewProductVariationSectionHtml
-                                                .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
-                                                .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
-                                                .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
-                                            AllProductVariationSectionHtml += NewProductVariationSectionHtml;
-                                        }
-                                        index++;
-                                    }
-
-
-                                    htmlChildren = htmlChildren
-                                        .Replace("[[PRODUCT_VARIATION_SECTION_HTML]]", AllProductVariationSectionHtml)
-                                        .Replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title)
-                                        .Replace("[[PRODUCT_PRICE]]", datos_variaciones_sale_price.ToString())
-                                        .Replace("[[PRODUCT_SALE_PRICE]]", datos_variaciones_price.ToString())
-                                        .Replace("[[PRODUCT_DESCRIPTION]]", datos_Catalogo_descrip_corta)
-                                        .Replace("[[PRODUCT_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
-                                        .Replace("[[PRODUCT_PRINCIPAL_SKU]]", datos_variaciones_url1_imagen_sku);
-                                    htmlFather = htmlFather
-                                        .Replace("[[OG_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
-                                        .Replace("[[OG_TITULO]]", datos_Catalogo_item_titulo)
-                                        .Replace("[[OG_DESCRIPCION]]", datos_Catalogo_descripcion)
-                                        .Replace("[[OG_PALABRAS_CLAVE]]", datos_Catalogo_palabras_clave);
-                                    htmlChildren = htmlChildren
-                                        .Replace("[[PRODUCT_SKU]]", datos_variaciones_sku)
-                                        .Replace("[[PRODUCT_DETAILS_TITLE_2]]", datos_Catalogo_descripcion2_titulo)
-                                        .Replace("[[PRODUCT_DETAILS_TITLE_1]]", datos_Catalogo_descripcion1_titulo)
-                                        .Replace("[[PRODUCT_DETAILS_TITLE_3]]", datos_Catalogo_descripcion3_titulo)
-                                        .Replace("[[PRODUCT_DETAILS_TEXT_1]]", datos_Catalogo_descripcion1_detalle)
-                                        .Replace("[[PRODUCT_DETAILS_TEXT_2]]", datos_Catalogo_descripcion2_detalle)
-                                        .Replace("[[PRODUCT_DETAILS_TEXT_3]]", datos_Catalogo_descripcion3_detalle);
-
-                                    var originalParent = DocumentProduct.QuerySelector("[id='product-thumbs-wrap']");
-                                    string replaceNew = originalParent.InnerHtml.Trim();
-                                    htmlChildren = htmlChildren.Replace(replaceNew, "[[PRODUCT_HTML]]");
-
-                                    var TextAllHtmlProduct = "";
-
-                                    var TextHtmlProduct = originalParent.InnerHtml;
-
-                                    var ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url1_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 1.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url2_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 2.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url3_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 3.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url4_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 4.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url5_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 5.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    ClonTextHtmlProduct = TextHtmlProduct;
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url6_imagen_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                                    ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 6.ToString());
-
-                                    TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                                    if (TextAllHtmlProduct != "")
-                                    {
-                                        htmlChildren = htmlChildren.Replace("[[PRODUCT_HTML]]", TextAllHtmlProduct);
-                                        htmlChildren = htmlChildren + "<script> var resultServer=" + Convert.ToString(result) + "</script>";
-                                    }
-                                }
-                                else if (!integracion_javascript && !resultado_servidor)
-                                {
-                                    if (urlName != "account")
-                                    {
-                                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
-                                        if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
-                                        {
-                                            htmlChildren = DocumentCatalogo.Source.Text;
-                                        }
-                                        else
-                                        {
-                                            htmlChildren = null;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_contenido/" + urlNameFinal + ".html" + "?v=" + valueRandom);
-                                        if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
-                                        {
-                                            htmlChildren = DocumentCatalogo.Source.Text;
-                                        }
-                                        else
-                                        {
-                                            htmlChildren = null;
-                                        }
-                                    }
-                                }
+                                htmlChildren = null;
                             }
                         }
                         else
                         {
-                            var DocumentDesactived = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_contenido/" + "error-desactived" + ".html" + "?v=" + valueRandom);
-                            if (DocumentDesactived.StatusCode == HttpStatusCode.OK)
-                            {
-                                htmlFather = DocumentDesactived.Source.Text;
-                                htmlChildren = "";
-                            }
+                            htmlChildren = documentChildren.Source.Text;
                         }
                     }
                 }
-                else
+                else if (codeProduct != "")
                 {
-                    htmlFather = "";
+
+                    var DocumentProduct = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "producto_detalle" + ".html" + "?v=" + valueRandom);
+                    htmlChildren = DocumentProduct.Source.Text;
+                    bool resultado_servidor = false;
+                    dynamic result = null;
+                    if (!htmlChildren.Contains(SaleformJavascript))
+                    {
+                        HttpClient Client = new HttpClient();
+                        var Result = await Client.GetAsync(UrlApiCatalog + "/datoscatalogo/" + "saleform/" + hostFolderClient + "/idproducto/" + codeProduct);
+                        var Content = Result.Content.ReadAsStringAsync().Result;
+                        if (Result.StatusCode == HttpStatusCode.OK)
+                        {
+                            htmlChildren = DocumentProduct.Source.Text;
+                            result = JsonConvert.DeserializeObject(Content);
+                            resultado_servidor = true;
+                        }
+                        else
+                        {
+                            urlName = "home";
+                        }
+                    }
+                    if (resultado_servidor)
+                    {
+                        var result_obj_datos_Catalogo = result.obj.datos_Catalogo[0];
+                        string datos_Catalogo_sku_padre = result_obj_datos_Catalogo.sku_padre;
+                        string datos_Catalogo_item_title = result_obj_datos_Catalogo.item_title;
+
+                        string datos_Catalogo_item_titulo = result_obj_datos_Catalogo.seo_titulo;
+                        string datos_Catalogo_palabras_clave = result_obj_datos_Catalogo.seo_palabras_clave;
+                        string datos_Catalogo_descripcion = result_obj_datos_Catalogo.seo_descripcion;
+                        string datos_Catalogo_tags_promociones = result_obj_datos_Catalogo.tags_promociones;
+                        string datos_Catalogo_url_producto = result_obj_datos_Catalogo.url_producto;
+                        string datos_Catalogo_descrip_corta = result_obj_datos_Catalogo.descrip_corta;
+
+                        string datos_Catalogo_descripcion1_titulo = result_obj_datos_Catalogo.descripcion1_titulo;
+                        string datos_Catalogo_descripcion2_titulo = result_obj_datos_Catalogo.descripcion2_titulo;
+                        string datos_Catalogo_descripcion3_titulo = result_obj_datos_Catalogo.descripcion3_titulo;
+
+                        string datos_Catalogo_descripcion1_detalle = result_obj_datos_Catalogo.descripcion1_detalle;
+                        string datos_Catalogo_descripcion2_detalle = result_obj_datos_Catalogo.descripcion2_detalle;
+                        string datos_Catalogo_descripcion3_detalle = result_obj_datos_Catalogo.descripcion3_detalle;
+
+                        string datos_variaciones_sku = "";
+                        decimal datos_variaciones_price = 0;
+                        decimal datos_variaciones_sale_price = 0;
+                        decimal datos_variaciones_cantidad = 0;
+                        string datos_variaciones_atributo1_titulo = "";
+                        string datos_variaciones_atributo1_valor = "";
+                        string datos_variaciones_atributo2_titulo = "";
+                        string datos_variaciones_atributo2_valor = "";
+                        string datos_variaciones_atributo3_titulo = "";
+                        string datos_variaciones_atributo3_valor = "";
+
+                        string datos_variaciones_url1_imagen_sku = "";
+                        string datos_variaciones_url2_imagen_sku = "";
+                        string datos_variaciones_url3_imagen_sku = "";
+                        string datos_variaciones_url4_imagen_sku = "";
+                        string datos_variaciones_url5_imagen_sku = "";
+                        string datos_variaciones_url6_imagen_sku = "";
+
+                        List<string> VariationsTitleOne = new List<string>();
+                        VariationsTitleOne.Add("");
+                        VariationsTitleOne.Add("");
+                        VariationsTitleOne.Add("");
+                        List<HashSet<string>> variationsList = new List<HashSet<string>>();
+                        variationsList.Add(new HashSet<string>());
+                        variationsList.Add(new HashSet<string>());
+                        variationsList.Add(new HashSet<string>());
+
+                        for (int i = 0; i < result.obj.datos_variaciones.Count; i++)
+                        {
+                            var result_obj_datos_variaciones = result.obj.datos_variaciones[i];
+                            if (i == 0)
+                            {
+                                datos_variaciones_sku = result_obj_datos_variaciones.sku;
+                                datos_variaciones_price = result_obj_datos_variaciones.price;
+                                datos_variaciones_sale_price = result_obj_datos_variaciones.sale_price;
+                                datos_variaciones_cantidad = result_obj_datos_variaciones.cantidad;
+                                datos_variaciones_atributo1_titulo = result_obj_datos_variaciones.atributo1_titulo;
+                                datos_variaciones_atributo1_valor = result_obj_datos_variaciones.atributo1_valor;
+                                datos_variaciones_atributo2_titulo = result_obj_datos_variaciones.atributo2_titulo;
+                                datos_variaciones_atributo2_valor = result_obj_datos_variaciones.atributo2_valor;
+                                datos_variaciones_atributo3_titulo = result_obj_datos_variaciones.atributo3_titulo;
+                                datos_variaciones_atributo3_valor = result_obj_datos_variaciones.atributo3_valor;
+                                datos_variaciones_url1_imagen_sku = result_obj_datos_variaciones.url1_imagen_sku;
+                                datos_variaciones_url2_imagen_sku = result_obj_datos_variaciones.url2_imagen_sku;
+                                datos_variaciones_url3_imagen_sku = result_obj_datos_variaciones.url3_imagen_sku;
+                                datos_variaciones_url4_imagen_sku = result_obj_datos_variaciones.url4_imagen_sku;
+                                datos_variaciones_url5_imagen_sku = result_obj_datos_variaciones.url5_imagen_sku;
+                                datos_variaciones_url6_imagen_sku = result_obj_datos_variaciones.url6_imagen_sku;
+                            }
+
+                            string datos_variaciones_atributo1_titulo_temp = result_obj_datos_variaciones.atributo1_titulo;
+                            string datos_variaciones_atributo1_valor_temp = result_obj_datos_variaciones.atributo1_valor;
+                            if(datos_variaciones_atributo1_titulo_temp != "" && datos_variaciones_atributo1_valor_temp != "") {
+                                VariationsTitleOne[0] = datos_variaciones_atributo1_titulo_temp;
+                                variationsList[0].Add(datos_variaciones_atributo1_valor_temp);
+                            }
+
+                            string datos_variaciones_atributo2_titulo_temp = result_obj_datos_variaciones.atributo2_titulo;
+                            string datos_variaciones_atributo2_valor_temp = result_obj_datos_variaciones.atributo2_valor;
+                            if(datos_variaciones_atributo2_titulo_temp != "" && datos_variaciones_atributo2_valor_temp != ""){
+                                VariationsTitleOne[1] = datos_variaciones_atributo2_titulo_temp;
+                                variationsList[1].Add(datos_variaciones_atributo2_valor_temp);
+                            }
+
+                            string datos_variaciones_atributo3_valor_temp = result_obj_datos_variaciones.atributo3_valor;
+                            string datos_variaciones_atributo3_titulo_temp = result_obj_datos_variaciones.atributo3_titulo;
+                            if(datos_variaciones_atributo3_valor_temp != "" && datos_variaciones_atributo3_titulo_temp != "") {
+                                VariationsTitleOne[2] = datos_variaciones_atributo3_titulo_temp;
+                                variationsList[2].Add(datos_variaciones_atributo3_valor_temp);
+                            }
+                        }
+
+                        string ProductVariationSectionHtml = DocumentProduct.QuerySelector("[id='product-variation-section']").InnerHtml.Trim();
+                        htmlChildren = htmlChildren.Replace(ProductVariationSectionHtml, "[[PRODUCT_VARIATION_SECTION_HTML]]");
+
+                        string ProductVariationItemHtml = DocumentProduct.QuerySelector("[id='product-variation-items']").InnerHtml;
+                        ProductVariationSectionHtml = ProductVariationSectionHtml.Replace(ProductVariationItemHtml, "[[PRODUCT_VARIATION_VALUE_HTML]]");
+
+                        int index = 0;
+                        string AllProductVariationSectionHtml = "";
+                        foreach (var valueTitle in VariationsTitleOne)
+                        {
+                            string NewProductVariationSectionHtml = ProductVariationSectionHtml;
+                            string AllProductVariationItemHtml = "";
+
+                            if (valueTitle != "")
+                            {
+                                foreach (var value in variationsList[index])
+                                {
+                                    string NewProductVariationItemHtml = ProductVariationItemHtml;
+                                    NewProductVariationItemHtml = NewProductVariationItemHtml.Replace("[[PRODUCT_VARIATION_VALUE]]", value);
+                                    AllProductVariationItemHtml += NewProductVariationItemHtml;
+                                }
+                                int CountTitle = index + 1;
+                                NewProductVariationSectionHtml = NewProductVariationSectionHtml
+                                    .Replace("[[PRODUCT_VARIATION_VALUE_HTML]]", AllProductVariationItemHtml)
+                                    .Replace("[[PRODUCT_VARIATION_NAME]]", valueTitle)
+                                    .Replace("[[PRODUCT_VARIATION_COUNT]]", CountTitle.ToString());
+                                AllProductVariationSectionHtml += NewProductVariationSectionHtml;
+                            }
+                            index++;
+                        }
+
+
+                        htmlChildren = htmlChildren
+                            .Replace("[[PRODUCT_VARIATION_SECTION_HTML]]", AllProductVariationSectionHtml)
+                            .Replace("[[PRODUCT_TITLE]]", datos_Catalogo_item_title)
+                            .Replace("[[PRODUCT_PRICE]]", datos_variaciones_sale_price.ToString())
+                            .Replace("[[PRODUCT_SALE_PRICE]]", datos_variaciones_price.ToString())
+                            .Replace("[[PRODUCT_DESCRIPTION]]", datos_Catalogo_descrip_corta)
+                            .Replace("[[PRODUCT_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
+                            .Replace("[[PRODUCT_PRINCIPAL_SKU]]", datos_variaciones_url1_imagen_sku);
+                        htmlFather = htmlFather
+                            .Replace("[[OG_PRINCIPAL_IMAGE]]", datos_variaciones_url1_imagen_sku)
+                            .Replace("[[OG_TITULO]]", datos_Catalogo_item_titulo)
+                            .Replace("[[OG_DESCRIPCION]]", datos_Catalogo_descripcion)
+                            .Replace("[[OG_PALABRAS_CLAVE]]", datos_Catalogo_palabras_clave);
+                        htmlChildren = htmlChildren
+                            .Replace("[[PRODUCT_SKU]]", datos_variaciones_sku)
+                            .Replace("[[PRODUCT_DETAILS_TITLE_2]]", datos_Catalogo_descripcion2_titulo)
+                            .Replace("[[PRODUCT_DETAILS_TITLE_1]]", datos_Catalogo_descripcion1_titulo)
+                            .Replace("[[PRODUCT_DETAILS_TITLE_3]]", datos_Catalogo_descripcion3_titulo)
+                            .Replace("[[PRODUCT_DETAILS_TEXT_1]]", datos_Catalogo_descripcion1_detalle)
+                            .Replace("[[PRODUCT_DETAILS_TEXT_2]]", datos_Catalogo_descripcion2_detalle)
+                            .Replace("[[PRODUCT_DETAILS_TEXT_3]]", datos_Catalogo_descripcion3_detalle);
+
+                        var originalParent = DocumentProduct.QuerySelector("[id='product-thumbs-wrap']");
+                        string replaceNew = originalParent.InnerHtml.Trim();
+                        htmlChildren = htmlChildren.Replace(replaceNew, "[[PRODUCT_HTML]]");
+
+                        var TextAllHtmlProduct = "";
+
+                        var TextHtmlProduct = originalParent.InnerHtml;
+
+                        var ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url1_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 1.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url2_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 2.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url3_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 3.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url4_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 4.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url5_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 5.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        ClonTextHtmlProduct = TextHtmlProduct;
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url6_imagen_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 6.ToString());
+
+                        TextAllHtmlProduct += ClonTextHtmlProduct;
+
+                        if (TextAllHtmlProduct != "")
+                        {
+                            htmlChildren = htmlChildren.Replace("[[PRODUCT_HTML]]", TextAllHtmlProduct);
+                            htmlChildren = htmlChildren + "<script> var resultServer=" + Convert.ToString(result) + "</script>";
+                        }
+                    }
+                    else if (!resultado_servidor)
+                    {
+                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
+                        if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
+                        {
+                            htmlChildren = DocumentCatalogo.Source.Text;
+                        }
+                        else
+                        {
+                            htmlChildren = null;
+                        }
+                    }
                 }
+
 
                 if (htmlChildren != null)
                 {
@@ -729,7 +440,6 @@ namespace SamishopV2_Template_1.Controllers
                 }
                 else
                 {
-                    
                     var documentError = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/paginas_contenido/" + "error" + ".html" + "?v=" + valueRandom);
                     var htmlError = documentError.Source.Text;
                     htmlFather = htmlFather.Replace("[[HTML_CONTENT]]", htmlError);
@@ -748,9 +458,8 @@ namespace SamishopV2_Template_1.Controllers
             bool resultado_servidor_google = false;
             dynamic resultGoogle = null;
             bool resultado_servidor_header = false;
-            bool resultado_servidor_categoria = false;
             HttpClient ClientGoogle = new HttpClient();
-            var ResultGoogle = await ClientGoogle.GetAsync("https://s3.us-east-1.amazonaws.com/sami5tiendas.s1a2m3i4.com/" + hostFolderClient + UrlDefaultTemplate + "/json/Scripts_de_seguimiento.json?v=" + valueRandom);
+            var ResultGoogle = await ClientGoogle.GetAsync(UrlGoogleStorage + "/" + hostFolderClient + UrlDefaultTemplate + "/json/Scripts_de_seguimiento.json?v=" + valueRandom);
             var ContentGoogle = ResultGoogle.Content.ReadAsStringAsync().Result;
             if (ResultGoogle.StatusCode == HttpStatusCode.OK)
             {
@@ -794,17 +503,14 @@ namespace SamishopV2_Template_1.Controllers
             }
             dynamic resultHeader = null;
             dynamic resultCategoria = null;
-            HttpClient ClientHeader = new HttpClient();
-            HttpClient ClientCategoria = new HttpClient();
-            HttpClient ClientSubCategoria = new HttpClient();
-            var ResultHeader = await ClientHeader.GetAsync("https://s3.us-east-1.amazonaws.com/sami5tiendas.sami-shop.com/" + hostFolderClient + UrlDefaultTemplate + "/json/config-store.json");
-            var ResultCategoria = await ClientCategoria.GetAsync(UrlApiCatalog + "/datoscatalogo/" + urlName3 + "/categoria/" + urlName);
+            HttpClient ClientS3 = new HttpClient();
+            var ResultHeader = await ClientS3.GetAsync(UrlGoogleStorage + "/" + hostFolderClient + UrlDefaultTemplate + "/json/config-store.json");
+            var ResultCategoria = await ClientS3.GetAsync(UrlApiCatalog + "/datoscatalogo/" + urlName3 + "/categoria/" + urlName);
             var ContentHeader = ResultHeader.Content.ReadAsStringAsync().Result;
             var ContentCategoria = ResultCategoria.Content.ReadAsStringAsync().Result;
 
             // BUSQUEDAS EN CAJA DE TEXTO Y VER TODO
 
-            var boolCategoria = false;
             var paginacontenido = false;
             var process = "";
             if (urlName.Equals("f"))
@@ -813,19 +519,12 @@ namespace SamishopV2_Template_1.Controllers
                 htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", "Búsqueda: " + urlName2);
                 htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", urlName2);
             } else {
-                if (urlName.Equals("process") || urlName.Equals("registro"))
-                {
-                    if (urlName.Equals("registro"))
-                    {
+                if (urlName.Equals("process") || urlName.Equals("registro")) {
+                    if (urlName.Equals("registro")) {
                         process = "Registro";
-                    }
-                    else
-                    {
+                    } else {
                         switch (urlName2)
                         {
-                            case "login":
-                                process = "Iniciar Sesión";
-                                break;
                             case "shopcart":
                                 process = "Carrito de Compras";
                                 break;
@@ -847,62 +546,8 @@ namespace SamishopV2_Template_1.Controllers
                         }
                     }
                     paginacontenido = true;
-
-                }
-                else
-                {
-                    //RESULTADO CATEGORIAS
-                    var muestra = false;
-                    if (ResultCategoria.StatusCode == HttpStatusCode.OK)
-                    {
-                        resultCategoria = JsonConvert.DeserializeObject(ContentCategoria);
-                        boolCategoria = true;
-
-                        string descripcion_categoria = "";
-                        string palabras_categoria = "";
-                        string titulo_categoria = "";
-                        if (resultCategoria.obj.Count > 0)
-                        {
-                            if (urlName2 == null)
-                            {
-                                descripcion_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].titulo[0].seo_descripcion;
-                                palabras_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].titulo[0].seo_palabras_clave;
-                                titulo_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].titulo[0].seo_titulo;
-                            }
-                            else
-                            {
-                                var e = -1;
-                                for (int i = 0; i < resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].subcategorias.Count; i++)
-                                {
-                                    if (resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].subcategorias[i].url == urlName2)
-                                    {
-                                        e = i;
-                                        break;
-                                    }
-                                }
-                                if (e == -1)
-                                {
-                                    descripcion_categoria = urlName2;
-                                    palabras_categoria = urlName2;
-                                    titulo_categoria = urlName2;
-                                }
-                                else
-                                {
-                                    descripcion_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].subcategorias[e].seo_descripcion;
-                                    palabras_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].subcategorias[e].seo_palabras_clave;
-                                    titulo_categoria = resultCategoria.obj[0].datafiltro.categorias.filtro_categorias[0].subcategorias[e].seo_titulo;
-                                }
-                            }
-                            htmlFather = htmlFather.Replace("[[OG_TITULO]]", titulo_categoria);
-                            htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", descripcion_categoria);
-                            htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", palabras_categoria);
-
-                        }
-
-                    }
                 }
             }
-            //FIN RESULTADO CATEGORIAS SEO
 
             if (ResultHeader.StatusCode == HttpStatusCode.OK)
             {
@@ -910,102 +555,38 @@ namespace SamishopV2_Template_1.Controllers
                 resultado_servidor_header = true;
             }
 
-            if (resultado_servidor_header && boolCategoria == false)
+            if (resultado_servidor_header)
             {
-                if (paginacontenido)
-                {
+                if (paginacontenido) {
                     urlName = "home";
                 }
-                /*
-                var pages = resultHeader[0].pageList;
-                int pagina = -1;
-                for (int i = 0; i < pages.Count; i++)
-                {
-                    if (urlName == (string)pages[i].urlWeb)
-                    {
-                        pagina = i;
-                        break;
-                    }
-                }
-                */
-                string meta_titulo = urlName;
-                string meta_imagen = "";
-                string meta_description = "";
-                string meta_clave = "";
-                string aux_meta_color = "";
-
-                /*
-                if (pagina > -1)
-                {
-                    var result_obj_header = resultHeader[0].pageList[pagina];
-                    meta_titulo = result_obj_header.metaTitle;
-                    meta_imagen = result_obj_header.metaImagen;
-                    meta_description = result_obj_header.metaDescripcion;
-                    meta_clave = result_obj_header.metaClave;
-                }
-                */
                 dynamic colores = JsonConvert.DeserializeObject(hexPaletaColores);
 
-                meta_titulo = resultHeader[0].ss_nombre_tienda;
-                meta_description = resultHeader[0].ss_descripcion_tienda;
-                meta_imagen = resultHeader[0].ss_url_logo_head;
-                aux_meta_color = resultHeader[0].ss_color;
+                string meta_titulo = resultHeader[0].ss_nombre_tienda;
+                string meta_imagen = resultHeader[0].ss_url_logo_head;
+                string meta_description = resultHeader[0].ss_descripcion_tienda;
 
-                string meta_color_1 = "";
-                string meta_color_2 = "";
-                string meta_color_3 = "";
-                string meta_color_4 = "";
-
-                try
-                {
-
-                    if (aux_meta_color != "" && aux_meta_color != null)
-                    {
-                        meta_color_1 = colores[aux_meta_color].color1;
-                        meta_color_2 = colores[aux_meta_color].color2;
-                        meta_color_3 = colores[aux_meta_color].color3;
-                        meta_color_4 = colores[aux_meta_color].color4;
-                    }
-                    else
-                    {
-                        meta_color_1 = colores["green"].color1;
-                        meta_color_2 = colores["green"].color2;
-                        meta_color_3 = colores["green"].color3;
-                        meta_color_4 = colores["green"].color4;
-                    }
+                string aux_meta_color = resultHeader[0].ss_color;
+                if (aux_meta_color == "" || aux_meta_color == null) {
+                    aux_meta_color = "green";
                 }
-                catch (Exception e)
-                
-                    {
-                        meta_color_1 = colores["green"].color1;
-                        meta_color_2 = colores["green"].color2;
-                        meta_color_3 = colores["green"].color3;
-                        meta_color_4 = colores["green"].color4;
-                    }
                
-                htmlFather = htmlFather.Replace("[[COLOR1]]", meta_color_1);
-                htmlFather = htmlFather.Replace("[[COLOR2]]", meta_color_2);
-                htmlFather = htmlFather.Replace("[[COLOR3]]", meta_color_3);
-                htmlFather = htmlFather.Replace("[[COLOR4]]", meta_color_4);
-
-                if (paginacontenido)
-                {
-                    htmlFather = htmlFather.Replace("[[OG_TITULO]]", process);
-                }
-                else
-                {
-                    htmlFather = htmlFather.Replace("[[OG_TITULO]]", meta_titulo);
-                }
-                htmlFather = htmlFather.Replace("[[OG_DESCRIPCION]]", meta_description);
-                htmlFather = htmlFather.Replace("[[OG_PALABRAS_CLAVE]]", meta_clave);
-                htmlFather = htmlFather.Replace("[[OG_PRINCIPAL_IMAGE]]", meta_imagen);
+                htmlFather = htmlFather
+                    .Replace("[[COLOR1]]", (string)colores[aux_meta_color].color1)
+                    .Replace("[[COLOR2]]", (string)colores[aux_meta_color].color2)
+                    .Replace("[[COLOR3]]", (string)colores[aux_meta_color].color3)
+                    .Replace("[[COLOR4]]", (string)colores[aux_meta_color].color4)
+                    .Replace("[[OG_TITULO]]", paginacontenido ? process : meta_titulo)
+                    .Replace("[[OG_DESCRIPCION]]", meta_description)
+                    .Replace("[[OG_PALABRAS_CLAVE]]", "")
+                    .Replace("[[OG_PRINCIPAL_IMAGE]]", meta_imagen);
             }
-            htmlFather = htmlFather.Replace("[[URL_CDN_STORAGE]]", UrlCdnClient + UrlDefaultTemplate);
-            htmlFather = htmlFather.Replace("[[URL_CDN_STORAGE_PRINCIPAL]]", UrlCdnClientPrincipal);
-            htmlFather = htmlFather.Replace("[[URL_CDN_STORAGE_PRIVADO]]", UrlCdnClient);
-            htmlFather = htmlFather.Replace("[[URL_DOMAIN_DEFAULT]]", urlName3);
-            htmlFather = htmlFather.Replace("[[VERSION_URL]]", Convert.ToString(valueRandom));
-            string og_url = Request.Headers.Referer;
+            htmlFather = htmlFather
+                .Replace("[[URL_CDN_STORAGE]]", UrlCdnClient + UrlDefaultTemplate)
+                .Replace("[[URL_CDN_STORAGE_PRINCIPAL]]", UrlCdnClientPrincipal)
+                .Replace("[[URL_CDN_STORAGE_PRIVADO]]", UrlCdnClient)
+                .Replace("[[URL_DOMAIN_DEFAULT]]", urlName3)
+                .Replace("[[VERSION_URL]]", Convert.ToString(valueRandom));
             htmlFather = htmlFather.Replace("[[OG_URL]]", "https://" + urlName3 + "/" + urlName);
             return new ContentResult
             {
@@ -1013,121 +594,6 @@ namespace SamishopV2_Template_1.Controllers
                 StatusCode = (int)HttpStatusCode.OK,
                 Content = htmlFather
             };
-        }
-
-        private async Task<int> ValidatePath(string urlPath, string domainName, string urlApi, string tokenAccess)
-        {
-            try
-            {
-                var data = new
-                {
-                    pagina = urlPath,
-                    dominio = domainName
-                };
-
-                HttpClient Client = new HttpClient();
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenAccess);
-                var Result = await Client.PostAsJsonAsync(urlApi + "/users/paginas/validar", data);
-                if (Result.StatusCode == HttpStatusCode.OK)
-                {
-                    var Content = Result.Content.ReadAsStringAsync().Result;
-                    dynamic result = JsonConvert.DeserializeObject(Content);
-                    string statusCode = "";
-                    string situacion = "";
-                    if (result != null)
-                    {
-                        statusCode = result.iCodigo;
-
-                        if (result.obj.Count > 0)
-                        {
-                            situacion = result.obj[0].situacion;
-                        }
-                    }
-                    if (situacion != null && situacion == "activo" || situacion == "parcial")
-                    {
-                        if (situacion == "activo")
-                        {
-                            if (statusCode == "SUCCESS")
-                            {
-                                return 10;
-                            }
-                            else if (statusCode == "ERROR_USUARIO_INVALIDO")
-                            {
-                                return 11;
-                            }
-                            else if (statusCode == "ERROR_NO_EXISTE_PAGINA_VALIDA_USUARIO")
-                            {
-                                return 12;
-                            }
-                            else if (statusCode == "ERROR_NO_EXISTE_PAGINA_VALIDA_PLAN")
-                            {
-                                return 13;
-                            }
-                        }
-                        else
-                        {
-                            if (statusCode == "ERROR_USUARIO_INVALIDO")
-                            {
-                                return 21;
-                            }
-                            return 20;
-                        }
-                    }
-                    else
-                    {
-                        if (situacion == "desactivado")
-                        {
-                            return 5;
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exception("Error");
-                }
-                return 6;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
-        }
-
-        private async Task<dynamic?> ObtenerHtmlBlog(string urlPath, string domainName, string urlApi, string tokenAccessSystem)
-        {
-            try
-            {
-                var data = new
-                {
-                    url_destino = urlPath,
-                    dominio = domainName
-                };
-
-                HttpClient Client = new HttpClient();
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenAccessSystem);
-                var Result = await Client.GetAsync(urlApi + "/blogs/detalle/obtener-url?url_destino=" + urlPath + "&" + "dominio=" + domainName);
-                if (Result.StatusCode == HttpStatusCode.OK)
-                {
-                    var Content = Result.Content.ReadAsStringAsync().Result;
-                    dynamic result = JsonConvert.DeserializeObject(Content);
-                    bool estado = result.bEstado;
-                    if (estado)
-                    {
-                        return result.obj;
-                    }
-                    return null;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-
         }
     }
 }
