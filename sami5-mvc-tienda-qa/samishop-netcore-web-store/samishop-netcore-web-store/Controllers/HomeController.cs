@@ -46,7 +46,7 @@ namespace SamishopV2_Template_1.Controllers
             string hostFolderClient = "";
             string urlNameFinal = null;
             var UrlCdnClient = "";
-            var UrlCdnClientPlantilla = "";
+            var UrlCdnClientPlantilla = UrlPlantilla;
             var UrlCdnClientPrincipal = configurationSetting["UrlCdnStoragePrincipal"];
             string urlName3 = "";
 
@@ -61,7 +61,7 @@ namespace SamishopV2_Template_1.Controllers
                 hostFolderClientHost = hostFolderClientHost.Replace("www.", "");
 
                 urlName3 = hostFolderClientHost;
-                //urlName3 = "comprandoconmb.s1a2m3i4.com";
+                //urlName3 = "qafrankcatering.s1a2m3i4.com";
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -73,18 +73,18 @@ namespace SamishopV2_Template_1.Controllers
                 var config = Configuration.Default.WithDefaultLoader();
                 var context = BrowsingContext.New(config);
                 
-                var UrlGoogleTemplate = UrlCdnClient + UrlDefaultTemplate + "/template" + ".html" + "?v=" + valueRandom;
+                var UrlGoogleTemplate = UrlCdnClientPlantilla + UrlDefaultTemplate + "/template" + ".html" + "?v=" + valueRandom;
                 var documentFather = await context.OpenAsync(UrlGoogleTemplate);
                 if (documentFather.StatusCode != HttpStatusCode.OK) throw new Exception();
                 htmlFather = documentFather.Source.Text;
                 
-                var UrlGoogleHeader = UrlCdnClient + UrlDefaultTemplate + "/header/" + "header" + ".html" + "?v=" + valueRandom;
+                var UrlGoogleHeader = UrlCdnClientPlantilla + UrlDefaultTemplate + "/header/" + "header" + ".html" + "?v=" + valueRandom;
                 var documentHeader = await context.OpenAsync(UrlGoogleHeader);
                 if (documentHeader.StatusCode != HttpStatusCode.OK) throw new Exception();
                 string htmlDocumentHeader = documentHeader.Source.Text;
                 htmlFather = htmlFather.Replace("[[HTML_HEADER_V1]]", htmlDocumentHeader);
                 
-                var UrlGoogleFooter = UrlCdnClient + UrlDefaultTemplate + "/footer/" + "footer" + ".html" + "?v=" + valueRandom;
+                var UrlGoogleFooter = UrlCdnClientPlantilla + UrlDefaultTemplate + "/footer/" + "footer" + ".html" + "?v=" + valueRandom;
                 var documentFooter = await context.OpenAsync(UrlGoogleFooter);
 
                 if (documentFooter.StatusCode != HttpStatusCode.OK) throw new Exception();
@@ -160,7 +160,7 @@ namespace SamishopV2_Template_1.Controllers
                     {
 
                         TypePage = "paginas_aplicacion";
-                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/" + TypePage + "/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
+                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/" + TypePage + "/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
                         if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
                         {
                             htmlChildren = DocumentCatalogo.Source.Text;
@@ -173,11 +173,11 @@ namespace SamishopV2_Template_1.Controllers
                     else
                     {
                         
-                        var documentChildren = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
+                        var documentChildren = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
 
                         if (documentChildren.StatusCode != HttpStatusCode.OK)
                         {    
-                            var DocumentCatalogo = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
+                            var DocumentCatalogo = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/" + TypePage + "/" + urlNameFinal + ".html" + "?v=" + valueRandom);
                             if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
                             {
                                 htmlChildren = DocumentCatalogo.Source.Text;
@@ -196,7 +196,7 @@ namespace SamishopV2_Template_1.Controllers
                 else if (codeProduct != "")
                 {
 
-                    var DocumentProduct = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "producto_detalle" + ".html" + "?v=" + valueRandom);
+                    var DocumentProduct = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/paginas_aplicacion/" + "producto_detalle" + ".html" + "?v=" + valueRandom);
                     htmlChildren = DocumentProduct.Source.Text;
                     bool resultado_servidor = false;
                     dynamic result = null;
@@ -421,7 +421,7 @@ namespace SamishopV2_Template_1.Controllers
                     }
                     else if (!resultado_servidor)
                     {
-                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClient + UrlDefaultTemplate + "/paginas_aplicacion/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
+                        var DocumentCatalogo = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/paginas_aplicacion/" + "process_catalogo" + ".html" + "?v=" + valueRandom);
                         if (DocumentCatalogo.StatusCode == HttpStatusCode.OK)
                         {
                             htmlChildren = DocumentCatalogo.Source.Text;
@@ -440,7 +440,7 @@ namespace SamishopV2_Template_1.Controllers
                 }
                 else
                 {
-                    var documentError = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/paginas_contenido/" + "error" + ".html" + "?v=" + valueRandom);
+                    var documentError = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/paginas_contenido/" + "error" + ".html" + "?v=" + valueRandom);
                     var htmlError = documentError.Source.Text;
                     htmlFather = htmlFather.Replace("[[HTML_CONTENT]]", htmlError);
                 }
@@ -450,7 +450,7 @@ namespace SamishopV2_Template_1.Controllers
             {
                 var config = Configuration.Default.WithDefaultLoader();
                 var context = BrowsingContext.New(config);
-                var documentError = await context.OpenAsync(UrlCdnClient  + UrlDefaultTemplate + "/paginas_contenido/" + "error-tecnical" + ".html" + "?v=" + valueRandom);
+                var documentError = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/paginas_contenido/" + "error-tecnical" + ".html" + "?v=" + valueRandom);
                 var htmlError = documentError.Source.Text;
                 htmlFather = htmlFather.Replace("[[HTML_CONTENT]]", htmlError);
             }
