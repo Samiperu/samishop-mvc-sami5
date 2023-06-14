@@ -23,7 +23,7 @@ namespace SamishopV2_Template_1.Controllers
             configurationSetting = configuration;
         }
 
-        [Route("/{urlName?}/{urlName2?}")]
+       [Route("/{urlName?}/{urlName2?}")]
         public async Task<ActionResult> Index(string urlName, string urlName2)
         {
             string hexPaletaColores = "{" +
@@ -374,42 +374,42 @@ namespace SamishopV2_Template_1.Controllers
                         var ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url1_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 1.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "1");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url2_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 2.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "2");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url3_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 3.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "3");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url4_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 4.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "4");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url5_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 5.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "5");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         ClonTextHtmlProduct = TextHtmlProduct;
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url6_imagen_sku);
                         ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", 6.ToString());
+                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "6");
 
                         TextAllHtmlProduct += ClonTextHtmlProduct;
 
