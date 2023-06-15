@@ -23,18 +23,35 @@ namespace SamishopV2_Template_1.Controllers
             configurationSetting = configuration;
         }
 
+        string hexPaletaColores = "{" +
+            "green: {color1: '#E3E8C9',color2: '#CED69A',color3: '#A9B546',color4: '#777C56'}," +
+            "blue: {color1: '#C9D4E8',color2: '#CED69A',color3: '#4672B5',color4: '#56617C'}," +
+            "purple: {color1: '#D7C9E8',color2: '#B49AD6',color3: '#7746B5',color4: '#62567C'}," +
+            "red: {color1: '#E8C9C9',color2: '#D69A9A',color3: '#B54646',color4: '#7C5656'}," +
+            "orange: {color1: '#FFD9BE',color2: '#E5AC78',color3: '#D47540',color4: '#7C6156'}," +
+            "dark: {color1: '#EBEBEB',color2: '#C8C8C8',color3: '#959595',color4: '#585858'}" +
+        "}";
+
+        private async Task<string> GetTemplate(IBrowsingContext context, long randomValue) {
+            string UrlPlantilla = configurationSetting["UrlPlantilla"];
+            var UrlDefaultTemplate = configurationSetting["UrlDefaultTemplate"];
+            var UrlGoogleTemplate = UrlPlantilla + UrlDefaultTemplate + "/template.html" + "?v=" + randomValue;
+            var documentFather = await context.OpenAsync(UrlGoogleTemplate);
+            if (documentFather.StatusCode != HttpStatusCode.OK) throw new Exception();
+            return documentFather.Source.Text;
+        }
+
+        private static string ProccessTemplate(string template, string og_title) {
+            return "";
+        }
+
        [Route("/{urlName?}/{urlName2?}")]
         public async Task<ActionResult> Index(string urlName, string urlName2)
         {
-            string hexPaletaColores = "{" +
-                "green: {color1: '#E3E8C9',color2: '#CED69A',color3: '#A9B546',color4: '#777C56'}," +
-                "blue: {color1: '#C9D4E8',color2: '#CED69A',color3: '#4672B5',color4: '#56617C'}," +
-                "purple: {color1: '#D7C9E8',color2: '#B49AD6',color3: '#7746B5',color4: '#62567C'}," +
-                "red: {color1: '#E8C9C9',color2: '#D69A9A',color3: '#B54646',color4: '#7C5656'}," +
-                "orange: {color1: '#FFD9BE',color2: '#E5AC78',color3: '#D47540',color4: '#7C6156'}," +
-                "dark: {color1: '#EBEBEB',color2: '#C8C8C8',color3: '#959595',color4: '#585858'}" +
-            "}";
-            var htmlFather = "";
+            long valueRandom = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+            var config = Configuration.Default.WithDefaultLoader();
+            var context = BrowsingContext.New(config);
+            string htmlFather = await GetTemplate(context, valueRandom);
             string htmlChildren = null;
             var UrlGoogleStorage = configurationSetting["UrlCdnStorage"];
             var UrlDefaultTemplate = configurationSetting["UrlDefaultTemplate"];
@@ -50,7 +67,7 @@ namespace SamishopV2_Template_1.Controllers
             var UrlCdnClientPrincipal = configurationSetting["UrlCdnStoragePrincipal"];
             string urlName3 = "";
 
-            var valueRandom = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"));
+            
             string myuri = Request.Headers.Host;
             string[] separatedUrl = myuri.Split('/');
             try
@@ -61,7 +78,7 @@ namespace SamishopV2_Template_1.Controllers
                 hostFolderClientHost = hostFolderClientHost.Replace("www.", "");
 
                 urlName3 = hostFolderClientHost;
-                //urlName3 = "qafrankcatering.s1a2m3i4.com";
+                urlName3 = "qafrankcaja.s1a2m3i4.com";
                 hostFolderClient = urlName3;
 
                 UrlCdnClient = UrlGoogleStorage + "/" + urlName3;
@@ -69,14 +86,6 @@ namespace SamishopV2_Template_1.Controllers
                 // INICIO CONSUME TEMPLATE.HTML DE PLANTILLA TIENDA
                 UrlCdnClientPlantilla = UrlPlantilla;
                 // FIN CONSUME TEMPLATE.HTML DE PLANTILLA TIENDA
-
-                var config = Configuration.Default.WithDefaultLoader();
-                var context = BrowsingContext.New(config);
-                
-                var UrlGoogleTemplate = UrlCdnClientPlantilla + UrlDefaultTemplate + "/template" + ".html" + "?v=" + valueRandom;
-                var documentFather = await context.OpenAsync(UrlGoogleTemplate);
-                if (documentFather.StatusCode != HttpStatusCode.OK) throw new Exception();
-                htmlFather = documentFather.Source.Text;
                 
                 var UrlGoogleHeader = UrlCdnClientPlantilla + UrlDefaultTemplate + "/header/" + "header" + ".html" + "?v=" + valueRandom;
                 var documentHeader = await context.OpenAsync(UrlGoogleHeader);
@@ -150,10 +159,7 @@ namespace SamishopV2_Template_1.Controllers
                     }
                     if (urlName != null && urlName2 != null)
                     {
-                        if (!urlName.Equals("blog"))
-                        {
-                            TypePage = "paginas_aplicacion";
-                        }
+                        TypePage = "paginas_aplicacion";
                     }
 
                     if (urlName == "f")
@@ -371,47 +377,20 @@ namespace SamishopV2_Template_1.Controllers
 
                         var TextHtmlProduct = originalParent.InnerHtml;
 
-                        var ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url1_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "1");
+                        var AddVariant = delegate(string sku, string url_image_sku, string count)
+                        {
+                            return TextHtmlProduct
+                                .Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url1_imagen_sku)
+                                .Replace("[[PRODUCT_SKU]]", datos_variaciones_sku)
+                                .Replace("[[PRODUCT_COUNT]]", count);
+                        };
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url1_imagen_sku, "1");
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url2_imagen_sku, "2");
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url3_imagen_sku, "3");
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url4_imagen_sku, "4");
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url5_imagen_sku, "5");
+                        TextAllHtmlProduct += AddVariant(datos_variaciones_sku, datos_variaciones_url6_imagen_sku, "6");
 
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                        ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url2_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "2");
-
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                        ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url3_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "3");
-
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                        ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url4_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "4");
-
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                        ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url5_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "5");
-
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
-
-                        ClonTextHtmlProduct = TextHtmlProduct;
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_IMAGE]]", datos_variaciones_url6_imagen_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_SKU]]", datos_variaciones_sku);
-                        ClonTextHtmlProduct = ClonTextHtmlProduct.Replace("[[PRODUCT_COUNT]]", "6");
-
-                        TextAllHtmlProduct += ClonTextHtmlProduct;
 
                         if (TextAllHtmlProduct != "")
                         {
@@ -448,8 +427,6 @@ namespace SamishopV2_Template_1.Controllers
             }
             catch (Exception ex)
             {
-                var config = Configuration.Default.WithDefaultLoader();
-                var context = BrowsingContext.New(config);
                 var documentError = await context.OpenAsync(UrlCdnClientPlantilla + UrlDefaultTemplate + "/paginas_contenido/" + "error-tecnical" + ".html" + "?v=" + valueRandom);
                 var htmlError = documentError.Source.Text;
                 htmlFather = htmlFather.Replace("[[HTML_CONTENT]]", htmlError);
